@@ -3939,12 +3939,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f4e52296466f34cb32a1306de4efc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xTrajectory: 3
+  xTrajectory: 2
   xFreq: 0.5
-  xAmpli: 0
-  yTrajectory: 1
-  yFreq: 0.2
-  yAmpli: 0
+  xAmpli: 0.1
+  yTrajectory: 3
+  yFreq: 0.12
+  yAmpli: 3
   zTrajectory: 2
   zFreq: 0.1
   zAmpli: 0

@@ -48,7 +48,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		//Vector3 acceleration = ((currentVelocity - oldVelocity) / Time.deltaTime).magnitude;
 		oldVelocity = currentVelocity;
 		oldPosition = gameObject.transform.position;
-        int indiceMaxYm1=0;
+
         //update the position array
 		if (++indice >= size)
 			indice -= size;
@@ -72,8 +72,8 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.SetActive (true);
 				particles.transform.position = positionArray[indiceMaxY]; //gameObject.transform.position;
 
-				indiceMaxYm1 = (indiceMaxY < STEP) ? indiceMaxY + size-STEP : indiceMaxY - STEP; //get the previous Point
-				particles.transform.rotation = Quaternion.LookRotation (velocityArray[indiceMaxYm1].normalized);//(currentVelocity.normalized);
+
+				particles.transform.rotation = Quaternion.LookRotation (getPreviousVelocity().normalized);//(currentVelocity.normalized);
 			}
 		}
         
@@ -84,6 +84,8 @@ public class Detect_direction_changes : MonoBehaviour {
         position = indice + 1 +i;
         if(position>=size)
             position -=size;
+		if(position<0)
+			position +=size;
         return position;
     }
     bool GetRangeMax(){
@@ -116,6 +118,17 @@ public class Detect_direction_changes : MonoBehaviour {
     else
         return false;
 
-}
+	}
+	Vector3 getPreviousVelocity()
+	{
+		Vector3 mean;
+		mean = new Vector3 ();
+		for (int i = 1+1; i < 10+1; i++) {
+			mean += velocityArray [get (- i)];
+		}
+		return -1 * mean / 10;
+
+	}
+
 }
 
