@@ -13,6 +13,8 @@ public class Detect_direction_changes : MonoBehaviour {
 	Vector3 oldPosition;
 	float lastChangeTime;
     Vector3[] positionArray;
+	Vector3[] velocityArray;
+	float[] timeArray;
     int indice;
     int size;
 
@@ -27,14 +29,14 @@ public class Detect_direction_changes : MonoBehaviour {
 		oldPosition = new Vector3 (0, 0, 0);
         indice = 0;
         size = 100;
-        Vector3[] positionArray = new Vector3[size];
-i       float[] velocityArray = new float[size];
-        float[] timeArray = new float[size];
+        positionArray = new Vector3[size];
+		velocityArray = new Vector3[size];
+        timeArray = new float[size];
         for (int i = 0; i <= size; i++)
         {
-            positionArray[i] = new Vector3(0.0f,0.0f,0.0f);      
-            velocityArray[i] = 0.0;
-            timeArray[i]=0.0;
+            positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);      
+			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+            timeArray[i]=0.0f;
         }
 	}
 	
@@ -46,7 +48,7 @@ i       float[] velocityArray = new float[size];
 		oldPosition = gameObject.transform.position;
 
         //update the position array``
-        indice = (++indice>=size) ? indice : 0;
+        indice = (indice++ >= size) ? indice : 0;
         positionArray[indice] = gameObject.transform.position;
         velocityArray[indice] = currentVelocity;
         timeArray[indice] = Time.time;
