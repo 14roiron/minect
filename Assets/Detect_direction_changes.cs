@@ -108,7 +108,11 @@ public class Detect_direction_changes : MonoBehaviour {
         indiceMaxY = indiceMax;
         timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] );
 
+<<<<<<< HEAD
     if(range>1.5 && timepourcentage>0.7 && timepourcentage<0.8 )
+=======
+    if(range>5 && timepourcentage>0.7 && timepourcentage<0.8 )
+>>>>>>> 72ed9e8a3c52876213329e9ba8efd40d309d6178
         return true;
     else
         return false;

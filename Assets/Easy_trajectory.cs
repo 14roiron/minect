@@ -11,11 +11,14 @@ public class Easy_trajectory : MonoBehaviour {
 	}
 
 	public trajectoryTypes xTrajectory;
-	public float xFreq = 1;
+	public float xFreq;
+	public float xAmpli;
 	public trajectoryTypes yTrajectory;
-	public float yFreq = 1;
+	public float yFreq;
+	public float yAmpli;
 	public trajectoryTypes zTrajectory;
-	public float zFreq = 1;
+	public float zFreq;
+	public float zAmpli;
 
 	// Use this for initialization
 	void Start () {
@@ -25,9 +28,9 @@ public class Easy_trajectory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float x, y, z = 0;
-		x = getTrajectory (xTrajectory, xFreq);
-		y = getTrajectory (yTrajectory, yFreq);
-		z = getTrajectory (zTrajectory, zFreq);
+		x = xAmpli * getTrajectory (xTrajectory, xFreq);
+		y = yAmpli * getTrajectory (yTrajectory, yFreq);
+		z = zAmpli * getTrajectory (zTrajectory, zFreq);
 		gameObject.transform.position = new Vector3 (x, y, z);
 	}
 
@@ -39,7 +42,8 @@ public class Easy_trajectory : MonoBehaviour {
 			return Mathf.Sin (2 * freq * Mathf.PI * Time.time);
 		} 
 		if (type == trajectoryTypes.Triangle) {
-			return Mathf.Cos (2 * freq * Mathf.PI * Time.time);
+			float t = Time.time;
+			return 4 * Mathf.Abs(t * freq - Mathf.Floor (t * freq - 1) - 1.5f) - 1;
 		} 
 		if (type == trajectoryTypes.None) {
 			return 0;
