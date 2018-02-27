@@ -47,4 +47,5 @@ sysinfo.txt
 .DS_store
 *.ini
 *.asset
+*.data
 
