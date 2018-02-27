@@ -13,6 +13,8 @@ public class Detect_direction_changes : MonoBehaviour {
 	Vector3 oldPosition;
 	float lastChangeTime;
     Vector3[] positionArray;
+	Vector3[] velocityArray;
+	float[] timeArray;
     int indice;
     int size;
 
@@ -27,14 +29,14 @@ public class Detect_direction_changes : MonoBehaviour {
 		oldPosition = new Vector3 (0, 0, 0);
         indice = 0;
         size = 100;
-        Vector3[] positionArray = new Vector3[size];
-i       float[] velocityArray = new float[size];
-        float[] timeArray = new float[size];
-        for (int i = 0; i <= size; i++)
+        positionArray = new Vector3[size];
+		velocityArray = new Vector3[size];
+        timeArray = new float[size];
+        for (int i = 0; i < size; i++)
         {
-            positionArray[i] = new Vector3(0.0f,0.0f,0.0f);      
-            velocityArray[i] = 0.0;
-            timeArray[i]=0.0;
+            positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);      
+			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+            timeArray[i]=0.0f;
         }
 	}
 	
@@ -45,8 +47,9 @@ i       float[] velocityArray = new float[size];
 		oldVelocity = currentVelocity;
 		oldPosition = gameObject.transform.position;
 
-        //update the position array``
-        indice = (++indice>=size) ? indice : 0;
+        //update the position array
+		if (++indice >= size)
+			indice -= size;
         positionArray[indice] = gameObject.transform.position;
         velocityArray[indice] = currentVelocity;
         timeArray[indice] = Time.time;
@@ -60,7 +63,8 @@ i       float[] velocityArray = new float[size];
 		}
 		else {
 			gameObject.transform.position = handTransfrom.position;
-			if (Time.time - lastChangeTime > 5 + pauseTime) {
+			if(GetRangeMax()){
+            //if (Time.time - lastChangeTime > 5 + pauseTime) {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
@@ -70,19 +74,45 @@ i       float[] velocityArray = new float[size];
 		}
         
 	}
-    Vector3 get(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
+    int get(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
     {
         int position;
         position = indice + 1 +i;
         if(position>=size)
             position -=size;
-        return positionArray[position];
+        return position;
     }
-    void GetRangeMax(){
+    bool GetRangeMax(){
         float minY;
         float maxY;
         float indiceMax;
-        
+        float timepourcentage;
+        Vector3 currentPos;
+        minY=inf;
+        maxY=-inf;
+        C
+        for(int i=0;i<size;i++)
+        {
+            currentPos = positionArray[get(i)];
+            if(maxY<currentPos.y)
+            {
+                maxY=currentPos.y;
+                indiceMax=i;
+            }
+            if(minY>currentPos.y)
+            {
+                minY=currentPos.y;
+            }
+        }
+        range=maxY-minY;
+        indiceMaxY = indiceMax;
+        timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] );
+
+    if(range>1 && timepourcentage>0.7 && timepourcentage<0.8 )
+        return true;
+    else
+        return false;
+
 }
 }
 
