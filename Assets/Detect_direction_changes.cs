@@ -18,7 +18,7 @@ public class Detect_direction_changes : MonoBehaviour {
     int indice;
     int size;
 
-    int range;
+    float range;
     int indiceMaxY;
 
 	// Use this for initialization
@@ -28,7 +28,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		lastChangeTime = 0;
 		oldPosition = new Vector3 (0, 0, 0);
         indice = 0;
-        size = 100;
+        size = 20;
         positionArray = new Vector3[size];
 		velocityArray = new Vector3[size];
         timeArray = new float[size];
@@ -85,12 +85,12 @@ public class Detect_direction_changes : MonoBehaviour {
     bool GetRangeMax(){
         float minY;
         float maxY;
-        float indiceMax;
+        int indiceMax;
         float timepourcentage;
         Vector3 currentPos;
-        minY=inf;
-        maxY=-inf;
-        C
+		minY=float.PositiveInfinity;
+		maxY=float.NegativeInfinity;
+		indiceMax = 0;
         for(int i=0;i<size;i++)
         {
             currentPos = positionArray[get(i)];
@@ -108,7 +108,7 @@ public class Detect_direction_changes : MonoBehaviour {
         indiceMaxY = indiceMax;
         timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] );
 
-    if(range>1 && timepourcentage>0.7 && timepourcentage<0.8 )
+    if(range>5 && timepourcentage>0.7 && timepourcentage<0.8 )
         return true;
     else
         return false;
