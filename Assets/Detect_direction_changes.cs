@@ -60,7 +60,7 @@ i       float[] velocityArray = new float[size];
 		}
 		else {
 			gameObject.transform.position = handTransfrom.position;
-						if (Time.time - lastChangeTime > 5 + pauseTime) {
+			if (Time.time - lastChangeTime > 5 + pauseTime) {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
@@ -78,9 +78,11 @@ i       float[] velocityArray = new float[size];
             position -=size;
         return positionArray[position];
     }
-    void GetRangeMax()
+    void GetRangeMax(){
         float minY;
         float maxY;
         float indiceMax;
-
+        
 }
+}
+
