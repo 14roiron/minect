@@ -3,11 +3,12 @@
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-Assets/AssetStoreTools*
+
+# Assets/AssetStoreTools*
 Assets/Plugins*
 Assets/Scenes*
 Assets/K2Examples*
-Assets/Standard Assets*
+"Assets/Standard Assets"*
 
 # Visual Studio 2015 cache directory
 /.vs/
