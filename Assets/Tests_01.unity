@@ -225,7 +225,7 @@ MonoBehaviour:
   changeDetected: 0
   particles: {fileID: 1041183326}
   handTransfrom: {fileID: 1473345871}
-  pauseTime: 4
+  pauseTime: 2
 --- !u!96 &848593367
 TrailRenderer:
   serializedVersion: 2
@@ -261,7 +261,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 4
+  m_Time: 2
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.05

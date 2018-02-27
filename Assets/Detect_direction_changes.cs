@@ -17,6 +17,7 @@ public class Detect_direction_changes : MonoBehaviour {
 	float[] timeArray;
     int indice;
     int size;
+	int STEP;
 
     float range;
     int indiceMaxY;
@@ -29,6 +30,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		oldPosition = new Vector3 (0, 0, 0);
         indice = 0;
         size = 50;
+		STEP = 2;
         positionArray = new Vector3[size];
 		velocityArray = new Vector3[size];
         timeArray = new float[size];
@@ -46,7 +48,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		//Vector3 acceleration = ((currentVelocity - oldVelocity) / Time.deltaTime).magnitude;
 		oldVelocity = currentVelocity;
 		oldPosition = gameObject.transform.position;
-
+        int indiceMaxYm1=0;
         //update the position array
 		if (++indice >= size)
 			indice -= size;
@@ -68,8 +70,10 @@ public class Detect_direction_changes : MonoBehaviour {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
-				particles.transform.position = gameObject.transform.position;
-				particles.transform.rotation = Quaternion.LookRotation (currentVelocity.normalized);
+				particles.transform.position = positionArray[indiceMaxY]; //gameObject.transform.position;
+
+				indiceMaxYm1 = (indiceMaxY < STEP) ? indiceMaxY + size-STEP : indiceMaxY - STEP; //get the previous Point
+				particles.transform.rotation = Quaternion.LookRotation (velocityArray[indiceMaxYm1].normalized);//(currentVelocity.normalized);
 			}
 		}
         
@@ -106,8 +110,8 @@ public class Detect_direction_changes : MonoBehaviour {
         }
         range=maxY-minY;
         indiceMaxY = indiceMax;
-        timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] );
-    if(range>1.0 && timepourcentage>0.7 && timepourcentage<0.8 )
+        timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] ); //get the max position
+    if(range>1.0 && timepourcentage>0.8 && timepourcentage<0.85 )
         return true;
     else
         return false;
