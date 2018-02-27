@@ -3940,8 +3940,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xTrajectory: 1
-  xFreq: 0.5
-  yTrajectory: 1
-  yFreq: 0.2
+  xFreq: 0.15
+  xAmpli: 0.2
+  yTrajectory: 3
+  yFreq: 0.5
+  yAmpli: 2
   zTrajectory: 2
   zFreq: 0.1
+  zAmpli: 0.3
