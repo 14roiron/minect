@@ -35,7 +35,7 @@ public class Detect_direction_changes : MonoBehaviour {
 			//Vector3 acceleration = ((currentVelocity - oldVelocity) / Time.deltaTime).magnitude;
 			oldVelocity = currentVelocity;
 			oldPosition = gameObject.transform.position;
-			if (Time.time - lastChangeTime > 5 + pauseTime) {
+			if (Time.time - lastChangeTime > 5 + pauseTime) { //Velocity changes
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);

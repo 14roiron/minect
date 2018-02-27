@@ -11,6 +11,6 @@ public class Easy_trajectory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		gameObject.transform.position = new Vector3 (Mathf.Sin (2 * Time.time), Mathf.Sin (3 * Time.time), 0);
 	}
 }
