@@ -3939,6 +3939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f4e52296466f34cb32a1306de4efc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   xTrajectory: 3
   xFreq: 0.5
   xAmpli: 0
@@ -3948,3 +3949,14 @@ MonoBehaviour:
   zTrajectory: 2
   zFreq: 0.1
   zAmpli: 0
+=======
+  xTrajectory: 1
+  xFreq: 0.15
+  xAmpli: 0.2
+  yTrajectory: 3
+  yFreq: 0.5
+  yAmpli: 2
+  zTrajectory: 2
+  zFreq: 0.1
+  zAmpli: 0.3
+>>>>>>> d9ac087f23cea26c948e2f41f2cec836b8f1382f
