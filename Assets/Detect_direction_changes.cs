@@ -113,7 +113,7 @@ public class Detect_direction_changes : MonoBehaviour {
         range=maxY-minY;
         indiceMaxY = indiceMax;
         timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] ); //get the max position
-    if(range>1.0 && timepourcentage>0.8 && timepourcentage<0.85 )
+    if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.85 )
         return true;
     else
         return false;
@@ -123,10 +123,11 @@ public class Detect_direction_changes : MonoBehaviour {
 	{
 		Vector3 mean;
 		mean = new Vector3 ();
-		for (int i = 1+1; i < 10+1; i++) {
+		for (int i = 1+20; i < 30+1; i++) {
 			mean += velocityArray [get (- i)];
 		}
-		return -1 * mean / 10;
+		//mean.y = -mean.y;
+		return  mean / 10;
 
 	}
 
