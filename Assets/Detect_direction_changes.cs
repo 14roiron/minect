@@ -22,6 +22,11 @@ public class Detect_direction_changes : MonoBehaviour {
     float range;
     int indiceMaxY;
 
+	private GameObject currentTrail;
+	private TrailRenderer currentTrailRenderer;
+
+	List<GameObject> ListOfTrail;
+
 	// Use this for initialization
 	void Start () {
 		changeDetected = false;
@@ -40,6 +45,9 @@ public class Detect_direction_changes : MonoBehaviour {
 			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
             timeArray[i]=0.0f;
         }
+
+		//create trail list
+		ListOfTrail = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -72,6 +80,15 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.SetActive (true);
 				particles.transform.position = positionArray[get(indiceMaxY)]; //gameObject.transform.position;
 				particles.transform.rotation = Quaternion.LookRotation (getPreviousVelocity().normalized);//(currentVelocity.normalized);
+
+				currentTrail = Instantiate (gameObject);
+				ListOfTrail.Add(currentTrail);
+				//currentTrail.transform.SetParent = null;
+				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
+				currentTrailRenderer.time = 50;
+				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
+				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
+				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
 			}
 		}
         
