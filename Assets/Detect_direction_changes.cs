@@ -109,6 +109,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	private GameObject currentTrail;
 	private TrailRenderer currentTrailRenderer;
+	private Transform currentTransform;
 
 	List<GameObject> ListOfTrail;
 
@@ -173,11 +174,18 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
 				//particles.transform.rotation = Quaternion.LookRotation(getPreviousVelocity().normalized);//(currentVelocity.normalized);
 
-				currentTrail = Instantiate (gameObject);
+
+
+
+
+				//currentTransform = Instantiate(gameObject.transform);
+				currentTrail = Instantiate(gameObject,gameObject.transform);
+				currentTrail.transform.position = new Vector3(gameObject.transform.position.x,gameObject.transform.position.y,gameObject.transform.position.z);
+
 				ListOfTrail.Add(currentTrail);
 				//currentTrail.transform.SetParent = null;
  				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
-				currentTrailRenderer.time = 5;
+				currentTrailRenderer.time = 50;
 				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
 				currentTrailRenderer.autodestruct = true;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
