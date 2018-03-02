@@ -29,12 +29,12 @@ public class RotVelocityArray {
 
 		if (++indice >= size) indice -= size;
 
-    positionArray[_index] = position;
-    velocityArray[_index] = velocity;
-    timeArray[_index] = Time.time;
+    _positionArray[_index] = position;
+    _velocityArray[_index] = velocity;
+    _timeArray[_index] = Time.time;
 	}
 
-	public int getIn(int i) {
+	public int getNextI(int i) {
 	//get the ith element, time based, with positionArray[i+1] is the oldest
 		int position;
 		position = _index + 1 + i;
@@ -52,7 +52,7 @@ public class RotVelocityArray {
 		indexMax = 0;
 
 		for(int i = 0; i < size; i++) {
-			currentPos = positionArray[get(i)];
+			currentPos = positionArray[getNextI(i)];
 				if(maxY < currentPos.y) {
 					maxY = currentPos.y;
 					indexMax = i;
@@ -63,8 +63,10 @@ public class RotVelocityArray {
 		}
 		range = maxY-minY;
 		indiceMaxY = indexMax;
-		timepourcentage = (_timeArray[get(indexMax)] - _timeArray[get(0)]) / (_timeArray[get(size-1)] - _timeArray[get(0)]); //get the max position
-		if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.85 ) return true;
+
+		//get the max position
+		timepourcentage = (_timeArray[getNextI(indexMax)] - _timeArray[getNextI(0)]) / (_timeArray[getNextI(size-1)] - _timeArray[getNextI(0)]);
+		if(range > 0.5 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
 		else return false;
 	}
 }
