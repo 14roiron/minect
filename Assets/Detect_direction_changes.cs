@@ -5,12 +5,13 @@ using UnityEngine;
 public class RotVelocityArray {
 	private Vector3[] _velocityArray;
 	private Vector3[] _positionArray;
-	private float[] _time;
+	private float[] _timeArray;
 	private int _index;
 	private int _size;
+	private int _indexMaxY;
 	private float _range;
 
-	public RotVelocityArray(size){
+	public RotVelocityArray(int size){
 		_size = size;
 		_positionArray = new Vector3[size];
 		_velocityArray = new Vector3[size];
@@ -22,23 +23,24 @@ public class RotVelocityArray {
 				_timeArray[i] = 0.0f;
 		}
 		_index = 0;
+		_indexMaxY = 0;
 	}
 
-	public append(position) {
+	public void append(Vector3 position) {
 		var velocity = (position - _positionArray[_index]) / Time.deltaTime;
 
-		if (++indice >= size) indice -= size;
+		if (++_index >= _size) _index -= _size;
 
-    _positionArray[_index] = position;
-    _velocityArray[_index] = velocity;
-    _timeArray[_index] = Time.time;
+	  _positionArray[_index] = position;
+	  _velocityArray[_index] = velocity;
+	  _timeArray[_index] = Time.time;
 	}
 
 	public int getNextI(int i) {
 	//get the ith element, time based, with positionArray[i+1] is the oldest
 		int position;
 		position = _index + 1 + i;
-		if(position >= size) position -= _size;
+		if(position >= _size) position -= _size;
 		if(position < 0) position += _size;
 		return position;
 	}
@@ -51,8 +53,8 @@ public class RotVelocityArray {
 		maxY = float.NegativeInfinity;
 		indexMax = 0;
 
-		for(int i = 0; i < size; i++) {
-			currentPos = positionArray[getNextI(i)];
+		for(int i = 0; i < _size; i++) {
+			currentPos = _positionArray[getNextI(i)];
 				if(maxY < currentPos.y) {
 					maxY = currentPos.y;
 					indexMax = i;
@@ -61,12 +63,12 @@ public class RotVelocityArray {
 					minY = currentPos.y;
 				}
 		}
-		range = maxY-minY;
-		indiceMaxY = indexMax;
+		_range = maxY - minY;
+		_indexMaxY = indexMax;
 
-		//get the max position
-		timepourcentage = (_timeArray[getNextI(indexMax)] - _timeArray[getNextI(0)]) / (_timeArray[getNextI(size-1)] - _timeArray[getNextI(0)]);
-		if(range > 0.5 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
+		 //get the max position
+		timepourcentage = (_timeArray[getNextI(indexMax)] - _timeArray[getNextI(0)]) / (_timeArray[getNextI(_size-1)] - _timeArray[getNextI(0)]);
+		if(_range > 0.5 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
 		else return false;
 	}
 }
@@ -91,6 +93,11 @@ public class Detect_direction_changes : MonoBehaviour {
   float range;
   int indiceMaxY;
 
+	private GameObject currentTrail;
+	private TrailRenderer currentTrailRenderer;
+
+	List<GameObject> ListOfTrail;
+
 	// Use this for initialization
 	void Start () {
 		changeDetected = false;
@@ -105,8 +112,11 @@ public class Detect_direction_changes : MonoBehaviour {
     for (int i = 0; i < size; i++) {
 			positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
 			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
-      timeArray[i]=0.0f;
-    }
+            timeArray[i]=0.0f;
+        }
+
+		//create trail list
+		ListOfTrail = new List<GameObject>();
 	}
 
 	// Update is called once per frame
@@ -136,13 +146,22 @@ public class Detect_direction_changes : MonoBehaviour {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
-				particles.transform.position = positionArray[get(indiceMaxY)]; //gameObject.transform.position;
+				particles.transform.position = positionArray[getIn(indiceMaxY)]; //gameObject.transform.position;
 				particles.transform.rotation = Quaternion.LookRotation (getPreviousVelocity().normalized);//(currentVelocity.normalized);
+
+				currentTrail = Instantiate (gameObject);
+				ListOfTrail.Add(currentTrail);
+				//currentTrail.transform.SetParent = null;
+				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
+				currentTrailRenderer.time = 50;
+				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
+				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
+				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
 			}
 		}
 
 	}
-    int get(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
+    int getIn(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
     {
         int position;
         position = indice + 1 +i;
@@ -163,7 +182,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		indiceMax = 0;
         for(int i=0;i<size;i++)
         {
-            currentPos = positionArray[get(i)];
+            currentPos = positionArray[getIn(i)];
             if(maxY<currentPos.y)
             {
                 maxY=currentPos.y;
@@ -176,7 +195,7 @@ public class Detect_direction_changes : MonoBehaviour {
         }
         range=maxY-minY;
         indiceMaxY = indiceMax;
-        timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] ); //get the max position
+        timepourcentage= (timeArray[getIn(indiceMax)] - timeArray[getIn(0)])/(timeArray[getIn(size-1)] -timeArray[getIn(0)] ); //get the max position
     if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.90 )
         return true;
     else
@@ -188,7 +207,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		Vector3 mean;
 		mean = new Vector3 ();
 		for (int i = 1+indiceMaxY; i > indiceMaxY-10-1; i--) {
-			mean += velocityArray [get ( i)];
+			mean += velocityArray [getIn( i)];
 		}
 		//mean.y = -mean.y;
 		return  mean / 10;
