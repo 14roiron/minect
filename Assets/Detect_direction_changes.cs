@@ -123,8 +123,8 @@ public class Detect_direction_changes : MonoBehaviour {
 	{
 		Vector3 mean;
 		mean = new Vector3 ();
-		for (int i = 1+indiceMax; i > indiceMax-10-1; i--) {
-			mean += velocityArray [get (- i)];
+		for (int i = 1+indiceMaxY; i > indiceMaxY-10-1; i--) {
+			mean += velocityArray [get ( i)];
 		}
 		//mean.y = -mean.y;
 		return  mean / 10;
