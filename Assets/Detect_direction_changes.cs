@@ -134,9 +134,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
-				particles.transform.position = positionArray[indiceMaxY]; //gameObject.transform.position;
-
-
+				particles.transform.position = positionArray[get(indiceMaxY)]; //gameObject.transform.position;
 				particles.transform.rotation = Quaternion.LookRotation (getPreviousVelocity().normalized);//(currentVelocity.normalized);
 			}
 		}
@@ -177,7 +175,7 @@ public class Detect_direction_changes : MonoBehaviour {
         range=maxY-minY;
         indiceMaxY = indiceMax;
         timepourcentage= (timeArray[get(indiceMax)] - timeArray[get(0)])/(timeArray[get(size-1)] -timeArray[get(0)] ); //get the max position
-    if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.85 )
+    if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.90 )
         return true;
     else
         return false;
