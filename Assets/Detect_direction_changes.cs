@@ -81,7 +81,7 @@ public class RotVelocityArray {
 	}
 
 	public Vector3 getMaxPosition() {
-		return _positionArray[getNextI(_indexMaxY)]
+		return _positionArray [getNextI (_indexMaxY)];
 	}
 }
 
@@ -92,12 +92,12 @@ public class Detect_direction_changes : MonoBehaviour {
 	public GameObject particles;
 	public Transform handTransfrom;
 	public float pauseTime;
-
+	float lastChangeTime;
 	RotVelocityArray rotArray;
 	/*
 	Vector3 oldVelocity;
 	Vector3 oldPosition;
-	float lastChangeTime;
+
   Vector3[] positionArray;
 	Vector3[] velocityArray;
 	float[] timeArray;
@@ -116,7 +116,8 @@ public class Detect_direction_changes : MonoBehaviour {
 	void Start () {
 		changeDetected = false;
 
-		rotArray = new RotVelocityArray();
+		rotArray = new RotVelocityArray(50);
+		lastChangeTime = 0;
 		/*
 		oldVelocity = new Vector3 (0, 0, 0);
 		lastChangeTime = 0;
@@ -139,7 +140,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		rotArray.append(gameObject.transform.position)
+		rotArray.append (gameObject.transform.position);
 		/*
     var currentVelocity = (gameObject.transform.position - oldPosition) / Time.deltaTime;
 		oldVelocity = currentVelocity;
@@ -176,7 +177,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				ListOfTrail.Add(currentTrail);
 				//currentTrail.transform.SetParent = null;
  				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
-				currentTrailRenderer.time = 50;
+				currentTrailRenderer.time = 5;
 				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
 				currentTrailRenderer.autodestruct = true;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
