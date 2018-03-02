@@ -71,6 +71,14 @@ public class RotVelocityArray {
 		if(_range > 0.5 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
 		else return false;
 	}
+
+	Vector3 getPreviousVelocity()
+	{
+		Vector3 mean;
+		mean = new Vector3 ();
+		for (int i = 1 + _indexMaxY; i > _indexMaxY - 10 - 1; i--) mean += _velocityArray [getNextI(i)];
+		return  mean / 10;
+	}
 }
 
 
