@@ -81,7 +81,7 @@ public class RotVelocityArray {
 	}
 
 	public Vector3 getMaxPosition() {
-		return _positionArray[getNextI(_indexMaxY)]
+		return _positionArray [getNextI (_indexMaxY)];
 	}
 }
 
@@ -98,13 +98,15 @@ public class Detect_direction_changes : MonoBehaviour {
 	private GameObject currentTrail;
 	private TrailRenderer currentTrailRenderer;
 	private Transform currentTransform;
+	private float lastChangeTime;
 
 	List<GameObject> ListOfTrail;
 
 	// Use this for initialization
 	void Start () {
 		changeDetected = false;
-		rotArray = new RotVelocityArray();
+		rotArray = new RotVelocityArray(50);
+		lastChangeTime = 0;
 
 		//create trail list
 		ListOfTrail = new List<GameObject>();
@@ -112,7 +114,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		rotArray.append(gameObject.transform.position)
+		rotArray.append (gameObject.transform.position);
 
 		if (changeDetected) {
 			if (Time.time > pauseTime + lastChangeTime) {
