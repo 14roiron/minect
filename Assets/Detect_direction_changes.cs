@@ -2,8 +2,76 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class RotVelocityArray {
+	private Vector3[] _velocityArray;
+	private Vector3[] _positionArray;
+	private float[] _time;
+	private int _index;
+	private int _size;
+	private float _range;
+
+	public RotVelocityArray(size){
+		_size = size;
+		_positionArray = new Vector3[size];
+		_velocityArray = new Vector3[size];
+		_timeArray = new float[size];
+		for (int i = 0; i < size; i++)
+		{
+				_positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+				_velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+				_timeArray[i] = 0.0f;
+		}
+		_index = 0;
+	}
+
+	public append(position) {
+		var velocity = (position - _positionArray[_index]) / Time.deltaTime;
+
+		if (++indice >= size) indice -= size;
+
+    positionArray[_index] = position;
+    velocityArray[_index] = velocity;
+    timeArray[_index] = Time.time;
+	}
+
+	public int getIn(int i) {
+	//get the ith element, time based, with positionArray[i+1] is the oldest
+		int position;
+		position = _index + 1 + i;
+		if(position >= size) position -= _size;
+		if(position < 0) position += _size;
+		return position;
+	}
+
+	public bool GetRangeMax(){
+		float minY, maxY, timepourcentage;
+		int indexMax;
+		Vector3 currentPos;
+		minY = float.PositiveInfinity;
+		maxY = float.NegativeInfinity;
+		indexMax = 0;
+
+		for(int i = 0; i < size; i++) {
+			currentPos = positionArray[get(i)];
+				if(maxY < currentPos.y) {
+					maxY = currentPos.y;
+					indexMax = i;
+				}
+				if(minY > currentPos.y) {
+					minY = currentPos.y;
+				}
+		}
+		range = maxY-minY;
+		indiceMaxY = indexMax;
+		timepourcentage = (_timeArray[get(indexMax)] - _timeArray[get(0)]) / (_timeArray[get(size-1)] - _timeArray[get(0)]); //get the max position
+		if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.85 ) return true;
+		else return false;
+	}
+}
+
+
 public class Detect_direction_changes : MonoBehaviour {
-	
+
 	public bool changeDetected;
 	public GameObject particles;
 	public Transform handTransfrom;
@@ -12,15 +80,14 @@ public class Detect_direction_changes : MonoBehaviour {
 	Vector3 oldVelocity;
 	Vector3 oldPosition;
 	float lastChangeTime;
-    Vector3[] positionArray;
+  Vector3[] positionArray;
 	Vector3[] velocityArray;
 	float[] timeArray;
-    int indice;
-    int size;
-	int STEP;
+  int indice;
+  int size;
 
-    float range;
-    int indiceMaxY;
+  float range;
+  int indiceMaxY;
 
 	private GameObject currentTrail;
 	private TrailRenderer currentTrailRenderer;
@@ -33,15 +100,13 @@ public class Detect_direction_changes : MonoBehaviour {
 		oldVelocity = new Vector3 (0, 0, 0);
 		lastChangeTime = 0;
 		oldPosition = new Vector3 (0, 0, 0);
-        indice = 0;
-        size = 50;
-		STEP = 2;
-        positionArray = new Vector3[size];
+    indice = 0;
+    size = 50;
+    positionArray = new Vector3[size];
 		velocityArray = new Vector3[size];
-        timeArray = new float[size];
-        for (int i = 0; i < size; i++)
-        {
-            positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);      
+    timeArray = new float[size];
+    for (int i = 0; i < size; i++) {
+			positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
 			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
             timeArray[i]=0.0f;
         }
@@ -49,11 +114,10 @@ public class Detect_direction_changes : MonoBehaviour {
 		//create trail list
 		ListOfTrail = new List<GameObject>();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-        var currentVelocity = (gameObject.transform.position - oldPosition) / Time.deltaTime;
-		//Vector3 acceleration = ((currentVelocity - oldVelocity) / Time.deltaTime).magnitude;
+    var currentVelocity = (gameObject.transform.position - oldPosition) / Time.deltaTime;
 		oldVelocity = currentVelocity;
 		oldPosition = gameObject.transform.position;
 
@@ -91,7 +155,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
 			}
 		}
-        
+
 	}
     int get(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
     {
@@ -147,4 +211,3 @@ public class Detect_direction_changes : MonoBehaviour {
 	}
 
 }
-
