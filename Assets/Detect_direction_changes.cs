@@ -150,9 +150,10 @@ public class Detect_direction_changes : MonoBehaviour {
 				currentTrail = Instantiate (gameObject);
 				ListOfTrail.Add(currentTrail);
 				//currentTrail.transform.SetParent = null;
-				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
+ 				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
 				currentTrailRenderer.time = 50;
 				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
+				currentTrailRenderer.autodestruct = true;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
 				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
 			}
