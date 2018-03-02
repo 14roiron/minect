@@ -972,7 +972,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 5
     enabled: 1
-    type: 0
+    type: 4
     angle: 15
     length: 2.42
     boxThickness: {x: 0, y: 0, z: 0}

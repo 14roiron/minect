@@ -81,7 +81,7 @@ public class RotVelocityArray {
 	}
 
 	public Vector3 getMaxPosition() {
-		return _positionArray [getNextI (_indexMaxY)];
+		return _positionArray[getNextI(_indexMaxY)]
 	}
 }
 
@@ -92,20 +92,8 @@ public class Detect_direction_changes : MonoBehaviour {
 	public GameObject particles;
 	public Transform handTransfrom;
 	public float pauseTime;
-	float lastChangeTime;
-	RotVelocityArray rotArray;
-	/*
-	Vector3 oldVelocity;
-	Vector3 oldPosition;
 
-  Vector3[] positionArray;
-	Vector3[] velocityArray;
-	float[] timeArray;
-  int indice;
-  int size;
-  float range;
-  int indiceMaxY;
-	*/
+	RotVelocityArray rotArray;
 
 	private GameObject currentTrail;
 	private TrailRenderer currentTrailRenderer;
@@ -116,24 +104,7 @@ public class Detect_direction_changes : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		changeDetected = false;
-
-		rotArray = new RotVelocityArray(50);
-		lastChangeTime = 0;
-		/*
-		oldVelocity = new Vector3 (0, 0, 0);
-		lastChangeTime = 0;
-		oldPosition = new Vector3 (0, 0, 0);
-    indice = 0;
-    size = 50;
-    positionArray = new Vector3[size];
-		velocityArray = new Vector3[size];
-    timeArray = new float[size];
-    for (int i = 0; i < size; i++) {
-			positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
-			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
-            timeArray[i]=0.0f;
-        }
-		*/
+		rotArray = new RotVelocityArray();
 
 		//create trail list
 		ListOfTrail = new List<GameObject>();
@@ -141,19 +112,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		rotArray.append (gameObject.transform.position);
-		/*
-    var currentVelocity = (gameObject.transform.position - oldPosition) / Time.deltaTime;
-		oldVelocity = currentVelocity;
-		oldPosition = gameObject.transform.position;
-
-        //update the position array
-		if (++indice >= size)
-			indice -= size;
-        positionArray[indice] = gameObject.transform.position;
-        velocityArray[indice] = currentVelocity;
-        timeArray[indice] = Time.time;
-		*/
+		rotArray.append(gameObject.transform.position)
 
 		if (changeDetected) {
 			if (Time.time > pauseTime + lastChangeTime) {
@@ -164,15 +123,12 @@ public class Detect_direction_changes : MonoBehaviour {
 		else {
 			gameObject.transform.position = handTransfrom.position;
 
-			//if(GetRangeMax()){
 			if(rotArray.getRangeMax()){
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
 				particles.transform.position = rotArray.getMaxPosition();
-				//particles.transform.position = positionArray[getIn(indiceMaxY)]; //gameObject.transform.position;
 				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
-				//particles.transform.rotation = Quaternion.LookRotation(getPreviousVelocity().normalized);//(currentVelocity.normalized);
 
 
 
@@ -187,64 +143,9 @@ public class Detect_direction_changes : MonoBehaviour {
  				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
 				currentTrailRenderer.time = 50;
 				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
-				currentTrailRenderer.autodestruct = true;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
 				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
 			}
 		}
 	}
-	/*
-    int getIn(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
-    {
-        int position;
-        position = indice + 1 +i;
-        if(position>=size)
-            position -=size;
-		if(position<0)
-			position +=size;
-        return position;
-    }
-    bool GetRangeMax(){
-        float minY;
-        float maxY;
-        int indiceMax;
-        float timepourcentage;
-        Vector3 currentPos;
-		minY=float.PositiveInfinity;
-		maxY=float.NegativeInfinity;
-		indiceMax = 0;
-        for(int i=0;i<size;i++)
-        {
-            currentPos = positionArray[getIn(i)];
-            if(maxY<currentPos.y)
-            {
-                maxY=currentPos.y;
-                indiceMax=i;
-            }
-            if(minY>currentPos.y)
-            {
-                minY=currentPos.y;
-            }
-        }
-        range=maxY-minY;
-        indiceMaxY = indiceMax;
-        timepourcentage= (timeArray[getIn(indiceMax)] - timeArray[getIn(0)])/(timeArray[getIn(size-1)] -timeArray[getIn(0)] ); //get the max position
-    if(range>0.5 && timepourcentage>0.4 && timepourcentage<0.90 )
-        return true;
-    else
-        return false;
-
-	}
-	Vector3 getPreviousVelocity()
-	{
-		Vector3 mean;
-		mean = new Vector3 ();
-		for (int i = 1+indiceMaxY; i > indiceMaxY-10-1; i--) {
-			mean += velocityArray [getIn( i)];
-		}
-		//mean.y = -mean.y;
-		return  mean / 10;
-
-	}
-	*/
 }
