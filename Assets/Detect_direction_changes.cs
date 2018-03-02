@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class RotVelocityArray {
+	private Vector3[] velocityArray;
+	private Vector3[] positionArray;
+	private float[] time;
+	private int index;
+	private int size;
+
+}
+
+
 public class Detect_direction_changes : MonoBehaviour {
-	
+
 	public bool changeDetected;
 	public GameObject particles;
 	public Transform handTransfrom;
@@ -17,7 +27,6 @@ public class Detect_direction_changes : MonoBehaviour {
 	float[] timeArray;
     int indice;
     int size;
-	int STEP;
 
     float range;
     int indiceMaxY;
@@ -36,12 +45,12 @@ public class Detect_direction_changes : MonoBehaviour {
         timeArray = new float[size];
         for (int i = 0; i < size; i++)
         {
-            positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);      
-			velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+            positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
+						velocityArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
             timeArray[i]=0.0f;
         }
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
         var currentVelocity = (gameObject.transform.position - oldPosition) / Time.deltaTime;
@@ -76,7 +85,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.transform.rotation = Quaternion.LookRotation (getPreviousVelocity().normalized);//(currentVelocity.normalized);
 			}
 		}
-        
+
 	}
     int get(int i)//get the ith element, time based, with positionArray[i+1] is the oldest
     {
@@ -132,4 +141,3 @@ public class Detect_direction_changes : MonoBehaviour {
 	}
 
 }
-
