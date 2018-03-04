@@ -224,8 +224,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeDetected: 0
   particles: {fileID: 1041183326}
-  handTransfrom: {fileID: 1473345871}
-  pauseTime: 2
+  handTransfrom: {fileID: 1473345867}
+  pauseTime: 5
 --- !u!96 &848593367
 TrailRenderer:
   serializedVersion: 2
@@ -3939,12 +3939,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f4e52296466f34cb32a1306de4efc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xTrajectory: 2
-  xFreq: 0.1
-  xAmpli: 5
+  xTrajectory: 1
+  xFreq: 0.05
+  xAmpli: 3
   yTrajectory: 3
-  yFreq: 0.12
-  yAmpli: 3
-  zTrajectory: 1
-  zFreq: 0.1
-  zAmpli: 5
+  yFreq: 0.2
+  yAmpli: 2
+  zTrajectory: 2
+  zFreq: 0.05
+  zAmpli: 3

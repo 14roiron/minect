@@ -81,8 +81,9 @@ public class RotVelocityArray {
 	}
 
 	public Vector3 getMaxPosition() {
-		return _positionArray[getNextI(_indexMaxY)]
+		return _positionArray [getNextI (_indexMaxY)];
 	}
+
 }
 
 
@@ -90,30 +91,37 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	public bool changeDetected;
 	public GameObject particles;
-	public Transform handTransfrom;
+	public GameObject handTransfrom;
 	public float pauseTime;
 
 	RotVelocityArray rotArray;
 
 	private GameObject currentTrail;
+	private GameObject currentParticule;
 	private TrailRenderer currentTrailRenderer;
 	private Transform currentTransform;
+	private float lastChangeTime;
 
 	List<GameObject> ListOfTrail;
 
 	// Use this for initialization
 	void Start () {
 		changeDetected = false;
-		rotArray = new RotVelocityArray();
+		rotArray = new RotVelocityArray(50);
 
 		//create trail list
 		ListOfTrail = new List<GameObject>();
+		lastChangeTime = 0;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		rotArray.append(gameObject.transform.position)
+		rotArray.append (gameObject.transform.position);
+		if (handTransfrom == null) {
+			Debug.Log("sphere not defined", gameObject);
+			return;
 
+		}
 		if (changeDetected) {
 			if (Time.time > pauseTime + lastChangeTime) {
 				changeDetected = false;
@@ -121,7 +129,8 @@ public class Detect_direction_changes : MonoBehaviour {
 			}
 		}
 		else {
-			gameObject.transform.position = handTransfrom.position;
+
+			gameObject.transform.position = handTransfrom.transform.position;
 
 			if(rotArray.getRangeMax()){
 				changeDetected = true;
@@ -135,16 +144,21 @@ public class Detect_direction_changes : MonoBehaviour {
 
 
 				//currentTransform = Instantiate(gameObject.transform);
-				currentTrail = Instantiate(gameObject,gameObject.transform);
-				currentTrail.transform.position = new Vector3(gameObject.transform.position.x,gameObject.transform.position.y,gameObject.transform.position.z);
+				//currentParticule = Instantiate(handTransfrom);
+				currentTrail = Instantiate(gameObject);
+				//currentTrail.transform.position = new Vector3(gameObject.transform.position.x,gameObject.transform.position.y,gameObject.transform.position.z);
 
 				ListOfTrail.Add(currentTrail);
+				//Debug.Break();
 				//currentTrail.transform.SetParent = null;
  				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
 				currentTrailRenderer.time = 50;
 				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
+				//currentParticule.GetComponent<Easy_trajectory> ().enabled = false;
+				//currentParticule.time	=	50;
 				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
+				//Debug.Break();
 			}
 		}
 	}
