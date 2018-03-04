@@ -108,6 +108,7 @@ public class Detect_direction_changes : MonoBehaviour {
 	void Start () {
 		changeDetected = false;
 		rotArray = new RotVelocityArray(50);
+		lastChangeTime = 0;
 
 		//create trail list
 		ListOfTrail = new List<GameObject>();
