@@ -10,6 +10,7 @@ public class RotVelocityArray {
 	private int _size;
 	private int _indexMaxY;
 	private float _range;
+	private bool isfull;
 
 	public RotVelocityArray(int size){
 		_size = size;
@@ -24,12 +25,16 @@ public class RotVelocityArray {
 		}
 		_index = 0;
 		_indexMaxY = 0;
+		isfull = false;
 	}
 
 	public void append(Vector3 position) {
 		var velocity = (position - _positionArray[_index]) / Time.deltaTime;
 
-		if (++_index >= _size) _index -= _size;
+		if (++_index >= _size) {
+			_index -= _size;
+			isfull = true;
+		}
 
 	  _positionArray[_index] = position;
 	  _velocityArray[_index] = velocity;
@@ -46,6 +51,8 @@ public class RotVelocityArray {
 	}
 
 	public bool getRangeMax(){
+		if (!isfull)
+			return false;
 		float minY, maxY, timepourcentage;
 		int indexMax;
 		Vector3 currentPos;
@@ -127,6 +134,7 @@ public class Detect_direction_changes : MonoBehaviour {
 			if (Time.time > pauseTime + lastChangeTime) {
 				changeDetected = false;
 				particles.SetActive (false);
+				gameObject.GetComponent<Detect_direction_changes>().enabled = false;
 			}
 		}
 		else {
@@ -134,32 +142,29 @@ public class Detect_direction_changes : MonoBehaviour {
 			gameObject.transform.position = handTransfrom.transform.position;
 
 			if(rotArray.getRangeMax()){
-				changeDetected = true;
-				lastChangeTime = Time.time;
-				particles.SetActive (true);
-				particles.transform.position = rotArray.getMaxPosition();
-				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
-
-
-
+				
 
 
 				//currentTransform = Instantiate(gameObject.transform);
 				//currentParticule = Instantiate(handTransfrom);
 				currentTrail = Instantiate(gameObject);
+				currentTrail.name = "Trail";
 				//currentTrail.transform.position = new Vector3(gameObject.transform.position.x,gameObject.transform.position.y,gameObject.transform.position.z);
 
-				ListOfTrail.Add(currentTrail);
+				//ListOfTrail.Add(currentTrail);
 				//Debug.Break();
-				//currentTrail.transform.SetParent = null;
- 				currentTrailRenderer = currentTrail.GetComponent<TrailRenderer>();
-				currentTrailRenderer.time = 50;
-				currentTrail.GetComponent<Detect_direction_changes>().enabled = false;
-				currentTrail.GetComponentInChildren<ParticleSystem> ().Clear ();
-				//currentParticule.GetComponent<Easy_trajectory> ().enabled = false;
-				//currentParticule.time	=	50;
-				currentTrail.GetComponentInChildren<ParticleSystem> ().enableEmission = false;
-				//Debug.Break();
+
+
+				changeDetected = true;
+				lastChangeTime = Time.time;
+				particles.SetActive (true);
+				particles.transform.position=rotArray.getMaxPosition();
+				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
+
+
+				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
+				currentTrailRenderer.time = 20;
+				currentTrailRenderer.autodestruct = true;
 			}
 		}
 	}
