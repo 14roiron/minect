@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DigitalRuby.AnimatedLineRenderer;
 
+/**
+ * Main node of the state tree.
+ */
 public class Node{
 	public Vector3 SourceNode;
 	public Vector3 EndNode;
@@ -16,7 +19,7 @@ public class Node{
 		this.addParent(Parent);
 		Children = new List<Node> ();
 	}
-
+	//get some debug infos about depth and number of children of the tree, only use for debug
 	public int Depth(){
 		if (Children.Count == 0)
 			return 1;
@@ -125,8 +128,17 @@ public class LSystem : MonoBehaviour {
 			result = newString;
 		}
 	}
+<<<<<<< Updated upstream
 
 	IEnumerator DrawTree() {
+=======
+	/**
+	 * Main L-system machine state
+	 * read the string and create the state tree
+	 * but all the chains, come back to the last state, so we don't read the last state.
+	 */
+	void DrawTree() {
+>>>>>>> Stashed changes
 		float pauseTime = drawTime / result.Length;
 		Node currentNode = NodeToDraw;
 		foreach (char c in result) {
@@ -139,7 +151,11 @@ public class LSystem : MonoBehaviour {
 				currentNode.EndNode=transform.position;
 				currentNode = new Node (transform.position, currentNode);
 		
+<<<<<<< Updated upstream
 				yield return new WaitForSeconds (pauseTime/100);
+=======
+				//yield return new WaitForSeconds (pauseTime);
+>>>>>>> Stashed changes
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -157,11 +173,19 @@ public class LSystem : MonoBehaviour {
 		}
 		Debug.Log (NodeToDraw.Depth());
 		Debug.Log (NodeToDraw.NumberOfNodes());
-
+		//lineraze the node tree
 		initDrawTreeLines ();
+		//Draw it
 		DrawTreeLines ();
 
 	}
+
+	/*
+	 * Init the reccursive function to create a 
+	 * linearization of the tree
+	 * the aim is a create n list of vect3 points,
+	 * each list end by a vertice
+	 */ 
 	void initDrawTreeLines() {
 		AnimatedLineRenderer lineRenderer = 
 			AnimatedLine.GetComponent<AnimatedLineRenderer>();
@@ -174,6 +198,15 @@ public class LSystem : MonoBehaviour {
 
 		CreateTreeLines (NodeToDraw.Children, MainPointsList[0]);
 	}
+
+	/**
+	 * 
+	 * Reccursive function
+	 *  to linearize, via deep copy
+	 * the idea is that we have a line from 
+	 * the bottom to each vertice, 
+	 * so multiple lines can be superposed
+	 */ 
 	void CreateTreeLines(List<Node> NodesToDraw,List<Vector3> pointList)
 	{
 		int count = 0;
@@ -199,6 +232,10 @@ public class LSystem : MonoBehaviour {
 			CreateTreeLines (node.Children, currentPointsList);
 		}
 	}
+	/**
+	 *  
+	 * 
+	 */
 	void DrawTreeLines()
 	{
 		int count = 0;
@@ -211,8 +248,27 @@ public class LSystem : MonoBehaviour {
 			} else {
 				ALR = AnimatedLine;
 			}
+<<<<<<< Updated upstream
 			foreach (Vector3 v in pointsListe) {
 				ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (v);
+=======
+			int c=0;
+			for(c=0;c<pointsListe.Count;c++) {
+				Vector3 v;
+				Vector3 vm1;
+				int interpole = 10;
+				if (c != pointsListe.Count-1 && c != 0) {
+					v = pointsListe [c];
+					vm1 = pointsListe [c-1];
+					for (int i = 0; i < interpole; i++) {
+						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
+						Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
+					}
+				}
+				else if(c==1)
+					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
+				
+>>>>>>> Stashed changes
 			}
 			
 		}
