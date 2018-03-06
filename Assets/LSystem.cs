@@ -8,7 +8,6 @@ public class Node{
 	public Vector3 EndNode;
 	public Node Parent;
 	public List<Node> Children;
-	public AnimatedLineRenderer AnimatedLine;
 
 	public Node(Vector3 SourceNode, Node Parent)
 	{
@@ -33,6 +32,8 @@ public class Node{
 	public void addParent(Node Parent)
 	{
 		this.Parent = Parent;
+		if (Parent == null)
+			return;
 		this.Parent.Children.Add(this);
 	}
 	public static void copyVect(Vector3 source, Vector3 dest)
@@ -53,7 +54,7 @@ public class TransformInfo {
 	}
 }
 
-[RequireComponent(typeof(AnimatedLineRenderer))]
+//[RequireComponent(typeof(AnimatedLineRenderer))]
 public class LSystem : MonoBehaviour {
 	private string axiom = "F";
 	private float turnAngle = 25.0f;
@@ -67,6 +68,8 @@ public class LSystem : MonoBehaviour {
 	private Stack<TransformInfo> transformStack = new Stack<TransformInfo> ();
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
+	public GameObject AnimatedLine;
+
 
 	// Use this for initialization
 	void Start () {
@@ -80,9 +83,10 @@ public class LSystem : MonoBehaviour {
 
 		result = axiom;
 		GenerateString ();
+		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
 		StartCoroutine(DrawTree ());
 
-		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
+
 
 	}
 
@@ -112,11 +116,11 @@ public class LSystem : MonoBehaviour {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
-				Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				Node.copyVect (transform.position, currentNode.EndNode);
 		
-				yield return new WaitForSeconds (pauseTime);
+				//yield return new WaitForSeconds (pauseTime);
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -135,27 +139,29 @@ public class LSystem : MonoBehaviour {
 		initDrawTreeLines ();
 	}
 	void initDrawTreeLines() {
-		AnimatedLineRenderer lineRenderer = GetComponent<AnimatedLineRenderer>();
+		AnimatedLineRenderer lineRenderer = 
+			AnimatedLine.GetComponent<AnimatedLineRenderer>();
 
 		lineRenderer.Enqueue(NodeToDraw.SourceNode);
 		lineRenderer.Enqueue(NodeToDraw.EndNode);
 		DrawTreeLines (NodeToDraw.Children, lineRenderer);
 
 	}
-	void DrawTreeLines(List<Node> NodesToDraw,AnimatedLineRenderer line)
+	void DrawTreeLines(List<Node> NodesToDraw,GameObject line)
 	{
 		int count = 0;
 		foreach (Node node in NodesToDraw) {
 			count++;
-			AnimatedLineRenderer ALR;
+
+			GameObject ALR;
 			if (count != NodesToDraw.Count) {
 				ALR = Instantiate (line);
 			} else {
 				ALR = line;
 			}
 
-			ALR.Enqueue(node.SourceNode);
-			ALR.Enqueue(node.EndNode);
+			ALR.GetComponent<AnimatedLineRenderer>().Enqueue(node.SourceNode);
+			ALR.GetComponent<AnimatedLineRenderer>().Enqueue(node.EndNode);
 			DrawTreeLines (node.Children, ALR);
 		}
 	}
