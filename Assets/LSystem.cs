@@ -1,6 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DigitalRuby.AnimatedLineRenderer;
+
+public class Node{
+	public Vector3 SourceNode;
+	public Vector3 EndNode;
+	public Node Parent;
+	public List<Node> Children;
+	public AnimatedLineRenderer AnimatedLine;
+
+	public Node(Vector3 SourceNode, Node Parent)
+	{
+		copyVect (SourceNode, this.SourceNode);
+		this.addParent(Parent);
+		Children = new List<Node> ();
+	}
+
+	public int Depth(){
+		if (Children.Count == 0)
+			return 1;
+		else {
+			int max = 0;
+			int localDepth;
+			foreach ( Node element in Children) {
+				max = ((localDepth = element.Depth ()) > max) ? localDepth : max;
+			}
+			return max;
+		}
+		return -1;
+	}
+	public void addParent(Node Parent)
+	{
+		this.Parent = Parent;
+		this.Parent.Children.Add(this);
+	}
+	public static void copyVect(Vector3 source, Vector3 dest)
+	{
+		dest = new Vector3(source.x,source.y,source.z);
+	}
+}
 
 
 public class TransformInfo {
@@ -14,6 +53,7 @@ public class TransformInfo {
 	}
 }
 
+[RequireComponent(typeof(AnimatedLineRenderer))]
 public class LSystem : MonoBehaviour {
 	private string axiom = "F";
 	private float turnAngle = 25.0f;
@@ -25,6 +65,8 @@ public class LSystem : MonoBehaviour {
 	public string result;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
 	private Stack<TransformInfo> transformStack = new Stack<TransformInfo> ();
+	private Stack<Node> nodeStack = new Stack<Node> ();
+	private Node NodeToDraw;
 
 	// Use this for initialization
 	void Start () {
@@ -39,7 +81,11 @@ public class LSystem : MonoBehaviour {
 		result = axiom;
 		GenerateString ();
 		StartCoroutine(DrawTree ());
+
+		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
+
 	}
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -61,23 +107,57 @@ public class LSystem : MonoBehaviour {
 
 	IEnumerator DrawTree() {
 		float pauseTime = drawTime / result.Length;
+		Node currentNode = NodeToDraw;
 		foreach (char c in result) {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
 				Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				//Node.copyVect (initialPosition, currentNode.SourceNode);
+				Node.copyVect (transform.position, currentNode.EndNode);
+		
 				yield return new WaitForSeconds (pauseTime);
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
 				transform.Rotate (Vector3.right * -turnAngle);
-			else if (c == '[')
+			else if (c == '[') {
 				transformStack.Push (new TransformInfo (transform.position, transform.rotation));
+				nodeStack.Push (new Node (transform.position, currentNode));
+			}
 			else if (c == ']') {
 				TransformInfo ti = transformStack.Pop ();
 				transform.position = ti.position;
 				transform.rotation = ti.rotation;
+				currentNode = nodeStack.Pop ();
 			}
 		}
+		initDrawTreeLines ();
 	}
+	void initDrawTreeLines() {
+		AnimatedLineRenderer lineRenderer = GetComponent<AnimatedLineRenderer>();
+
+		lineRenderer.Enqueue(NodeToDraw.SourceNode);
+		lineRenderer.Enqueue(NodeToDraw.EndNode);
+		DrawTreeLines (NodeToDraw.Children, lineRenderer);
+
+	}
+	void DrawTreeLines(List<Node> NodesToDraw,AnimatedLineRenderer line)
+	{
+		int count = 0;
+		foreach (Node node in NodesToDraw) {
+			count++;
+			AnimatedLineRenderer ALR;
+			if (count != NodesToDraw.Count) {
+				ALR = Instantiate (line);
+			} else {
+				ALR = line;
+			}
+
+			ALR.Enqueue(node.SourceNode);
+			ALR.Enqueue(node.EndNode);
+			DrawTreeLines (node.Children, ALR);
+		}
+	}
+
 }

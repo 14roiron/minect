@@ -16,6 +16,7 @@ public class LSystemGenerator : MonoBehaviour {
 	public string result;
 
 
+
 	List<point> points = new List<point>();
 	List<GameObject> branches = new List<GameObject>();
 
@@ -23,6 +24,8 @@ public class LSystemGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		cylinder = gameObject.transform.GetChild(0).gameObject;
+		cylinder.transform.position =  gameObject.transform.position;
 		GenerateTree();
 	}
 
