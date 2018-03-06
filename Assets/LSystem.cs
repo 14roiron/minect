@@ -74,8 +74,8 @@ public class LSystem : MonoBehaviour {
 	private float turnAngle = 25.0f;
 	private float branchLength = 0.5f;
 	//[Range(0,6)]
-	private int totalIterations = 1;
-	private float drawTime = 5;
+	private int totalIterations = 2;
+	private float drawTime = 1;
 
 	public string result;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
@@ -101,7 +101,7 @@ public class LSystem : MonoBehaviour {
 		result = axiom;
 		GenerateString ();
 		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
-		StartCoroutine(DrawTree ());
+		DrawTree ();
 
 
 
@@ -124,22 +124,26 @@ public class LSystem : MonoBehaviour {
 			}
 			result = newString;
 		}
+//		//remove the last ]
+//		if (result [result.Length - 1] == ']') {
+//			result = result.Remove (result.Length-1);
+//		}
 	}
 
-	IEnumerator DrawTree() {
+	void DrawTree() {
 		float pauseTime = drawTime / result.Length;
 		Node currentNode = NodeToDraw;
 		foreach (char c in result) {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
-				Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				//Node.copyVect (transform.position, currentNode.EndNode);
 				currentNode.EndNode=transform.position;
 				currentNode = new Node (transform.position, currentNode);
 		
-				yield return new WaitForSeconds (pauseTime/100);
+				//yield return new WaitForSeconds (pauseTime/10000);
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -203,7 +207,7 @@ public class LSystem : MonoBehaviour {
 	{
 		int count = 0;
 		foreach (List<Vector3> pointsListe in this.MainPointsList) {
-			count++;
+			
 
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
@@ -211,11 +215,26 @@ public class LSystem : MonoBehaviour {
 			} else {
 				ALR = AnimatedLine;
 			}
-			foreach (Vector3 v in pointsListe) {
-				ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (v);
+			int c=0;
+			for(c=0;c<pointsListe.Count;c++) {
+				Vector3 v;
+				Vector3 vm1;
+				int interpole = 10;
+				if (c != pointsListe.Count-1 && c != 0) {
+					v = pointsListe [c];
+					vm1 = pointsListe [c-1];
+					for (int i = 0; i < interpole; i++) {
+						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
+					}
+				}
+				else if(c==1)
+					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
+				
 			}
-			
+			count++;
+
 		}
+		return;
 	}
 
 }
