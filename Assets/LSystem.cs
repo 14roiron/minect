@@ -11,7 +11,8 @@ public class Node{
 
 	public Node(Vector3 SourceNode, Node Parent)
 	{
-		copyVect (SourceNode, this.SourceNode);
+		//copyVect (SourceNode, this.SourceNode);
+		this.SourceNode = SourceNode;
 		this.addParent(Parent);
 		Children = new List<Node> ();
 	}
@@ -25,9 +26,22 @@ public class Node{
 			foreach ( Node element in Children) {
 				max = ((localDepth = element.Depth ()) > max) ? localDepth : max;
 			}
-			return max;
+			return max+1;
 		}
-		return -1;
+		//return -1;
+	}
+	public int NumberOfNodes(){
+		if (Children.Count == 0)
+			return 1;
+		else {
+			int max = 0;
+			//int localDepth;
+			foreach ( Node element in Children) {
+				max = max + element.NumberOfNodes ();
+			}
+			return max+1;
+		}
+		//return -1;
 	}
 	public void addParent(Node Parent)
 	{
@@ -36,10 +50,10 @@ public class Node{
 			return;
 		this.Parent.Children.Add(this);
 	}
-	public static void copyVect(Vector3 source, Vector3 dest)
-	{
-		dest = new Vector3(source.x,source.y,source.z);
-	}
+//	public static void copyVect(Vector3 source, Vector3 dest)
+//	{
+//		dest = new Vector3(source.x,source.y,source.z);
+//	}
 }
 
 
@@ -60,7 +74,7 @@ public class LSystem : MonoBehaviour {
 	private float turnAngle = 25.0f;
 	private float branchLength = 0.5f;
 	//[Range(0,6)]
-	private int totalIterations = 3;
+	private int totalIterations = 1;
 	private float drawTime = 5;
 
 	public string result;
@@ -69,6 +83,9 @@ public class LSystem : MonoBehaviour {
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
 	public GameObject AnimatedLine;
+	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
+
+
 
 
 	// Use this for initialization
@@ -116,11 +133,13 @@ public class LSystem : MonoBehaviour {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
-				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
-				Node.copyVect (transform.position, currentNode.EndNode);
+				//Node.copyVect (transform.position, currentNode.EndNode);
+				currentNode.EndNode=transform.position;
+				currentNode = new Node (transform.position, currentNode);
 		
-				//yield return new WaitForSeconds (pauseTime);
+				yield return new WaitForSeconds (pauseTime/100);
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -136,7 +155,12 @@ public class LSystem : MonoBehaviour {
 				currentNode = nodeStack.Pop ();
 			}
 		}
+		Debug.Log (NodeToDraw.Depth());
+		Debug.Log (NodeToDraw.NumberOfNodes());
+
 		initDrawTreeLines ();
+		DrawTreeLines ();
+
 	}
 	void initDrawTreeLines() {
 		AnimatedLineRenderer lineRenderer = 
@@ -144,25 +168,53 @@ public class LSystem : MonoBehaviour {
 
 		lineRenderer.Enqueue(NodeToDraw.SourceNode);
 		lineRenderer.Enqueue(NodeToDraw.EndNode);
-		DrawTreeLines (NodeToDraw.Children, lineRenderer);
+		MainPointsList.Add(new List<Vector3> ());
+		MainPointsList [0].Add (NodeToDraw.SourceNode);
+		MainPointsList [0].Add (NodeToDraw.EndNode);
 
+		CreateTreeLines (NodeToDraw.Children, MainPointsList[0]);
 	}
-	void DrawTreeLines(List<Node> NodesToDraw,GameObject line)
+	void CreateTreeLines(List<Node> NodesToDraw,List<Vector3> pointList)
 	{
 		int count = 0;
 		foreach (Node node in NodesToDraw) {
 			count++;
 
-			GameObject ALR;
+			List<Vector3> currentPointsList;
 			if (count != NodesToDraw.Count) {
-				ALR = Instantiate (line);
+				//deep copy of the liste
+				currentPointsList = new List<Vector3>(pointList.Count);
+				pointList.ForEach((item)=>
+					{
+						currentPointsList.Add(new Vector3(item.x,item.y,item.z));
+					});
+				MainPointsList.Add (currentPointsList);
+				
 			} else {
-				ALR = line;
+				currentPointsList = pointList;
 			}
 
-			ALR.GetComponent<AnimatedLineRenderer>().Enqueue(node.SourceNode);
-			ALR.GetComponent<AnimatedLineRenderer>().Enqueue(node.EndNode);
-			DrawTreeLines (node.Children, ALR);
+			currentPointsList.Add(node.SourceNode);
+			currentPointsList.Add(node.EndNode);
+			CreateTreeLines (node.Children, currentPointsList);
+		}
+	}
+	void DrawTreeLines()
+	{
+		int count = 0;
+		foreach (List<Vector3> pointsListe in this.MainPointsList) {
+			count++;
+
+			GameObject ALR;
+			if (count != this.MainPointsList.Count) {
+				ALR = Instantiate (AnimatedLine,gameObject.transform);
+			} else {
+				ALR = AnimatedLine;
+			}
+			foreach (Vector3 v in pointsListe) {
+				ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (v);
+			}
+			
 		}
 	}
 
