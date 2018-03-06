@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -253,7 +253,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 615881520}
   m_LocalRotation: {x: -0, y: 0.739925, z: -0, w: 0.67268944}
-  m_LocalPosition: {x: -10, y: 1, z: 0}
+  m_LocalPosition: {x: -20, y: 12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -391,7 +391,7 @@ MonoBehaviour:
   MinimumDistance: 0
   SecondsPerLine: 0.01
   StartColor: {r: 0.39705884, g: 0.317486, b: 0.17517301, a: 1}
-  EndColor: {r: 0.1972859, g: 0.6544118, b: 0.37067848, a: 1}
+  EndColor: {r: 0, g: 0, b: 0, a: 1}
   StartWidth: 0.1
   EndWidth: 0.01
   SortLayerName: Default
@@ -423,6 +423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77db2a4eb0abd046a710d7511fb0e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  treeType: 0
+  turnAngle: 25
+  totalIterations: 3
   result: 
   AnimatedLine: {fileID: 948002747}
 --- !u!4 &1161815312

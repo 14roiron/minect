@@ -70,11 +70,17 @@ public class TransformInfo {
 
 //[RequireComponent(typeof(AnimatedLineRenderer))]
 public class LSystem : MonoBehaviour {
+	public enum TreeType {
+		Version1,
+		Version2
+	}
+
+	public TreeType treeType;
 	private string axiom = "F";
-	private float turnAngle = 25.0f;
+	public float turnAngle = 25.0f;
 	private float branchLength = 0.5f;
-	//[Range(0,6)]
-	private int totalIterations = 2;
+	[Range(0,6)]
+	public int totalIterations = 3;
 	private float drawTime = 1;
 
 	public string result;
@@ -86,25 +92,20 @@ public class LSystem : MonoBehaviour {
 	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
 
 
-
-
 	// Use this for initialization
 	void Start () {
-//		rules.Add ('A', "AB");
-//		rules.Add ('B', "A");
-
-		rules.Add('F', "FF+[+F-F-F]-[-F+F+F]");
-
-//		rules.Add ('X', "F[-X][X]F[-X]+FX");
-//		rules.Add ('F', "FF");
+		if (treeType == TreeType.Version1)
+			rules.Add ('F', "FF+[+F-F-F]-[-F+F+F]");
+		else if (treeType == TreeType.Version2) {
+			rules.Add ('F', "FF+[+F-F-F]-[-F+F++F]");
+//			rules.Add ('X', "F[-X][X]F[-X]+FX");
+//			rules.Add ('F', "FF");
+		}
 
 		result = axiom;
 		GenerateString ();
 		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
 		DrawTree ();
-
-
-
 	}
 
 	
@@ -140,7 +141,7 @@ public class LSystem : MonoBehaviour {
 				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				//Node.copyVect (transform.position, currentNode.EndNode);
-				currentNode.EndNode=transform.position;
+				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
 		
 				//yield return new WaitForSeconds (pauseTime/10000);
