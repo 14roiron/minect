@@ -77,8 +77,8 @@ public class LSystem : MonoBehaviour {
 	private float turnAngle = 25.0f;
 	private float branchLength = 0.5f;
 	//[Range(0,6)]
-	private int totalIterations = 1;
-	private float drawTime = 5;
+	private int totalIterations = 2;
+	private float drawTime = 1;
 
 	public string result;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
@@ -86,76 +86,21 @@ public class LSystem : MonoBehaviour {
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
 	public GameObject AnimatedLine;
-	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
-
-
-
-
-	// Use this for initialization
-	void Start () {
-//		rules.Add ('A', "AB");
-//		rules.Add ('B', "A");
-
-		rules.Add('F', "FF+[+F-F-F]-[-F+F+F]");
-
-//		rules.Add ('X', "F[-X][X]F[-X]+FX");
-//		rules.Add ('F', "FF");
-
-		result = axiom;
-		GenerateString ();
-		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
-		StartCoroutine(DrawTree ());
-
-
-
-	}
-
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	void GenerateString () {
-		for (int i = 0; i < totalIterations; i++) {
-			string newString = "";
-			foreach (char c in result) {
-				if (rules.ContainsKey (c))
-					newString += rules [c];
-				else
-					newString += c;
-			}
-			result = newString;
-		}
-	}
-<<<<<<< Updated upstream
-
-	IEnumerator DrawTree() {
-=======
-	/**
-	 * Main L-system machine state
-	 * read the string and create the state tree
-	 * but all the chains, come back to the last state, so we don't read the last state.
-	 */
+	List<List<Vector3>> MainPointsList = new List<List<Vector3
 	void DrawTree() {
->>>>>>> Stashed changes
 		float pauseTime = drawTime / result.Length;
 		Node currentNode = NodeToDraw;
 		foreach (char c in result) {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
-				Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				//Node.copyVect (transform.position, currentNode.EndNode);
 				currentNode.EndNode=transform.position;
 				currentNode = new Node (transform.position, currentNode);
 		
-<<<<<<< Updated upstream
-				yield return new WaitForSeconds (pauseTime/100);
-=======
 				//yield return new WaitForSeconds (pauseTime);
->>>>>>> Stashed changes
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -240,7 +185,7 @@ public class LSystem : MonoBehaviour {
 	{
 		int count = 0;
 		foreach (List<Vector3> pointsListe in this.MainPointsList) {
-			count++;
+			
 
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
@@ -248,10 +193,13 @@ public class LSystem : MonoBehaviour {
 			} else {
 				ALR = AnimatedLine;
 			}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 			foreach (Vector3 v in pointsListe) {
 				ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (v);
 =======
+=======
+>>>>>>> master
 			int c=0;
 			for(c=0;c<pointsListe.Count;c++) {
 				Vector3 v;
@@ -262,16 +210,24 @@ public class LSystem : MonoBehaviour {
 					vm1 = pointsListe [c-1];
 					for (int i = 0; i < interpole; i++) {
 						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
+<<<<<<< HEAD
 						Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
+=======
+>>>>>>> master
 					}
 				}
 				else if(c==1)
 					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
 				
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> master
 			}
-			
+			count++;
+
 		}
+		return;
 	}
 
 }

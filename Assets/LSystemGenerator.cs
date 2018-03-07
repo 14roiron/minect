@@ -9,7 +9,7 @@ public class LSystemGenerator : MonoBehaviour {
 
 	public Dictionary<char, string> rules = new Dictionary<char, string>();
 	[Range(0,6)]
-	public int iterations = 4;
+	public int iterations = 2;
 	public string input = "F";
 	private string output;
 	//[ReadOnly]
