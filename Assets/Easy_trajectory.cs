@@ -20,9 +20,11 @@ public class Easy_trajectory : MonoBehaviour {
 	public float zFreq;
 	public float zAmpli;
 
+	private Vector3 offset;
+
 	// Use this for initialization
 	void Start () {
-		
+		offset = gameObject.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -31,7 +33,7 @@ public class Easy_trajectory : MonoBehaviour {
 		x = xAmpli * getTrajectory (xTrajectory, xFreq);
 		y = yAmpli * getTrajectory (yTrajectory, yFreq);
 		z = zAmpli * getTrajectory (zTrajectory, zFreq);
-		gameObject.transform.position = new Vector3 (x, y, z);
+		gameObject.transform.position = new Vector3 (x, y, z) + offset;
 	}
 
 	float getTrajectory(trajectoryTypes type, float freq) {
