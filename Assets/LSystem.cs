@@ -162,10 +162,11 @@ public class LSystem : MonoBehaviour {
 				currentNode = nodeStack.Pop ();
 			}
 		}
+		Debug.Log ("Depth: " + NodeToDraw.Depth());
+		Debug.Log ("Nodes: " + NodeToDraw.NumberOfNodes());
 		gameObject.transform.position = originalTransform.position;
 		gameObject.transform.rotation = originalTransform.rotation;
-		Debug.Log (NodeToDraw.Depth());
-		Debug.Log (NodeToDraw.NumberOfNodes());
+
 		//lineraze the node tree
 		initDrawTreeLines ();
 		//Draw it
@@ -190,6 +191,21 @@ public class LSystem : MonoBehaviour {
 		MainPointsList [0].Add (NodeToDraw.EndNode);
 
 		CreateTreeLines (NodeToDraw.Children, MainPointsList[0]);
+
+		int debug1 = 0;
+		//clean loop
+		foreach (List<Vector3> nodes in MainPointsList) {
+			for(int i=2; i<nodes.Count;i++)
+			{
+				if  (nodes [i] == nodes [i - 2]){ //&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
+					nodes.RemoveAt(i-1); //test the linearization
+					nodes.RemoveAt(i-2); //test the linearization
+					debug1++;
+					i = 2;
+				}
+			}
+		}
+		Debug.Log ("points remove:" + debug1);
 	}
 
 	/**
@@ -203,6 +219,8 @@ public class LSystem : MonoBehaviour {
 	void CreateTreeLines(List<Node> NodesToDraw,List<Vector3> pointList)
 	{
 		int count = 0;
+		Vector3 previousPoint;
+		Vector3 ppreviousPoint;
 		foreach (Node node in NodesToDraw) {
 			count++;
 
@@ -220,21 +238,23 @@ public class LSystem : MonoBehaviour {
 				currentPointsList = pointList;
 			}
 
-			currentPointsList.Add(node.SourceNode);
-			currentPointsList.Add(node.EndNode);
+			previousPoint = currentPointsList[currentPointsList.Count - 1];
+			ppreviousPoint = currentPointsList[currentPointsList.Count - 2];
+			if (Vector3.Equals (node.EndNode, ppreviousPoint)) { //loop detection
+				currentPointsList.RemoveAt(currentPointsList.Count - 1);
+
+			}
+			else if(!Vector3.Equals(node.EndNode,previousPoint)){
+					//only if it's different from the last point, to prevent two equals points in the list.
+				if(!Vector3.Equals(node.SourceNode,previousPoint)){ 
+						currentPointsList.Add(node.SourceNode);
+					}
+				currentPointsList.Add(node.EndNode);
+			}
+
 			CreateTreeLines (node.Children, currentPointsList);
 		}
 
-		//clean loop
-		foreach (List<Vector3> nodes in MainPointsList) {
-			for(int i=2; i<nodes.Count;i++)
-			{
-				if (Vector3.Equals (nodes [i], nodes [i - 2])){ ///&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
-					nodes.RemoveAt(i-1); //test the linearization
-					nodes.RemoveAt(i-2); //test the linearization
-				}
-			}
-		}
 	}
 	/**
 	 *  
@@ -256,16 +276,16 @@ public class LSystem : MonoBehaviour {
 			for(c = 0;c < pointList.Count; c++) {
 				Vector3 v;
 				Vector3 vm1;
-				int interpolate = 10;
-				if (c != pointList.Count-1 && c != 0) {
-					v = pointList [c];
-					vm1 = pointList [c-1];
+				int interpole = 1;
+				if (c != pointsListe.Count-1 && c != 0) {
+					v = pointsListe [c];
+					vm1 = pointsListe [c-1];
 					if (Vector3.Equals (v, vm1)) { //if the values are equals, not going to interpolate
 						continue;
 					}
-					for (int i = 0; i < interpolate; i++) {
-						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpolate))));//interpolate points
-						// Debug.Log((vm1 + (v-vm1) * (((float)i) / ((float)interpolate))));
+					for (int i = 0; i < interpole; i++) {
+						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
+						//Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
 					}
 				}
 				else if(c==1)
