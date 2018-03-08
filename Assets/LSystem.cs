@@ -83,7 +83,7 @@ public class LSystem : MonoBehaviour {
 	public float turnAngle = 25.0f;
 	private float branchLength = 0.5f;
 	[Range(0,6)]
-	public int totalIterations = 3;
+	public int totalIterations = 2;
 	private float drawTime = 1;
 
 	public string result;
