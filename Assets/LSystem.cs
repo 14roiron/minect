@@ -99,7 +99,9 @@ public class LSystem : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		AnimatedLine.SetActive (false);
+		AnimatedLine.SetActive (true);
+		AnimatedLine.transform.position = gameObject.transform.position;
+
 
 		if (treeType == TreeType.Version1) {
 			rules.Add ('F', "FF+[+F-F-F]-[-F+F+F]");
