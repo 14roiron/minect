@@ -98,6 +98,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	public bool changeDetected;
 	public GameObject particles;
+	public GameObject tree;
 	public GameObject handTransfrom;
 	public float pauseTime;
 
@@ -132,6 +133,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.SetActive (false);
 				gameObject.GetComponent<Detect_direction_changes>().enabled = false;
 
+
 			}
 		}
 		else {
@@ -162,6 +164,12 @@ public class Detect_direction_changes : MonoBehaviour {
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
 				currentTrailRenderer.time = 20;
 				currentTrailRenderer.autodestruct = true;
+
+
+				tree.GetComponent<LSystem>().enabled = true;
+				tree.transform.position=rotArray.getMaxPosition();
+				//tree.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
+				Debug.Break();
 			}
 		}
 	}
