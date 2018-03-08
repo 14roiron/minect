@@ -172,26 +172,26 @@ public class LSystem : MonoBehaviour {
 		TransformInfo originalTransform = new TransformInfo (gameObject.transform.position, gameObject.transform.rotation);
 		foreach (char c in encodedTree) {
 			if (c == 'F') {
-				Vector3 initialPosition = transform.position;
-				transform.Translate (Vector3.up * currentBranchLength);
-				// Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
-				currentNode.EndNode = transform.position;
-				currentNode = new Node (transform.position, currentNode);
+				Vector3 initialPosition = gameObject.transform.position;
+				gameObject.transform.Translate (Vector3.up * currentBranchLength);
+				Debug.DrawLine (initialPosition, gameObject.transform.position, Color.white, 100000f, false);
+				currentNode.EndNode = gameObject.transform.position;
+				currentNode = new Node (gameObject.transform.position, currentNode);
 			}
 			else if (c == '+')
-				transform.Rotate (Vector3.right * turnAngle);
+				gameObject.transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
-				transform.Rotate (Vector3.right * -turnAngle);
+				gameObject.transform.Rotate (Vector3.right * -turnAngle);
 			else if (c == '[') {
 				currentBranchLength *= lenghtMultiplier;
-				transformStack.Push (new TransformInfo (transform.position, transform.rotation));
-				nodeStack.Push (new Node (transform.position, currentNode));
+				transformStack.Push (new TransformInfo (gameObject.transform.position, gameObject.transform.rotation));
+				nodeStack.Push (new Node (gameObject.transform.position, currentNode));
 			}
 			else if (c == ']') {
 				currentBranchLength /= lenghtMultiplier;
 				TransformInfo ti = transformStack.Pop ();
-				transform.position = ti.position;
-				transform.rotation = ti.rotation;
+				gameObject.transform.position = ti.position;
+				gameObject.transform.rotation = ti.rotation;
 				currentNode = nodeStack.Pop ();
 			}
 		}

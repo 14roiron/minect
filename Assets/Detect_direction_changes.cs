@@ -169,7 +169,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				tree.GetComponent<LSystem>().enabled = true;
 				tree.transform.position=rotArray.getMaxPosition();
 				//tree.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
-				//Debug.Break();
+				Debug.Break();
 			}
 		}
 	}
