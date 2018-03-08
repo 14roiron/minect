@@ -277,9 +277,9 @@ public class LSystem : MonoBehaviour {
 				Vector3 v;
 				Vector3 vm1;
 				int interpole = 1;
-				if (c != pointsListe.Count-1 && c != 0) {
-					v = pointsListe [c];
-					vm1 = pointsListe [c-1];
+				if (c != pointList.Count-1 && c != 0) {
+					v = pointList [c];
+					vm1 = pointList [c-1];
 					if (Vector3.Equals (v, vm1)) { //if the values are equals, not going to interpolate
 						continue;
 					}
