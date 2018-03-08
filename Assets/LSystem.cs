@@ -69,7 +69,8 @@ public class TransformInfo {
 public class LSystem : MonoBehaviour {
 	public enum TreeType {
 		Version1,
-		Version2
+		Version2,
+		Version3
 	}
 
 	public TreeType treeType;
@@ -79,6 +80,7 @@ public class LSystem : MonoBehaviour {
 	public float branchLength = 0.5f;
 	[Range(0, 1)]
 	public float lenghtMultiplier = 1;
+	public GameObject AnimatedLine;
 
 	private string encodedTree;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
@@ -86,26 +88,30 @@ public class LSystem : MonoBehaviour {
 	private Stack<TransformInfo> transformStack = new Stack<TransformInfo> ();
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
-	public GameObject AnimatedLine;
 	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
 
 	// Use this for initialization
 	void Start () {
+		AnimatedLine.SetActive (false);
+
 		if (treeType == TreeType.Version1) {
 			rules.Add ('F', "FF+[+F-F-F]-[-F+F+F]");
 			encodedTree = "F";
-		}
-		else if (treeType == TreeType.Version2) {
-			rules.Add ('F', "FF+[+F-F-F]-[-F+F++F]");
+		} else if (treeType == TreeType.Version2) {
+			rules.Add ('X', "F[-X][X]F[-X]+FX");
+			rules.Add ('F', "FF");
+			encodedTree = "X";
+		} else if (treeType == TreeType.Version3) {
+			rules.Add ('F', "FF[+FF+F][-FF-F]");
 			encodedTree = "F";
-//			rules.Add ('X', "F[-X][X]F[-X]+FX");
-//			rules.Add ('F', "FF");
 		}
 
+		NodeToDraw = new Node (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), null);
 		GenerateString ();
-		NodeToDraw = new Node (gameObject.transform.position, null);
-		//StartCoroutine (DrawTree ());
-		//DrawTree ();
+		Debug.Log (encodedTree);
+
+		StartCoroutine (DrawTree ());
+		// DrawTree ();
 	}
 
 	// Update is called once per frame
@@ -129,30 +135,35 @@ public class LSystem : MonoBehaviour {
 	//void DrawTree () {
 	IEnumerator DrawTree () {
 		Node currentNode = NodeToDraw;
+		float currentBranchLength = branchLength;
+		TransformInfo originalTransform = new TransformInfo (gameObject.transform.position, gameObject.transform.rotation);
 		foreach (char c in encodedTree) {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
-				transform.Translate (Vector3.up * branchLength);
-				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				transform.Translate (Vector3.up * currentBranchLength);
+				// Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
-				//yield return new WaitForSeconds (pauseTime/10000);
 			}
 			else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
 				transform.Rotate (Vector3.right * -turnAngle);
 			else if (c == '[') {
+				currentBranchLength *= lenghtMultiplier;
 				transformStack.Push (new TransformInfo (transform.position, transform.rotation));
 				nodeStack.Push (new Node (transform.position, currentNode));
 			}
 			else if (c == ']') {
+				currentBranchLength /= lenghtMultiplier;
 				TransformInfo ti = transformStack.Pop ();
 				transform.position = ti.position;
 				transform.rotation = ti.rotation;
 				currentNode = nodeStack.Pop ();
 			}
 		}
+		gameObject.transform.position = originalTransform.position;
+		gameObject.transform.rotation = originalTransform.rotation;
 		Debug.Log (NodeToDraw.Depth());
 		Debug.Log (NodeToDraw.NumberOfNodes());
 		//lineraze the node tree
@@ -235,10 +246,11 @@ public class LSystem : MonoBehaviour {
 		foreach (List<Vector3> pointList in this.MainPointsList) {
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
-				ALR = Instantiate (AnimatedLine,gameObject.transform);
+				ALR = Instantiate (AnimatedLine, gameObject.transform);
 			} else {
 				ALR = AnimatedLine;
 			}
+			ALR.SetActive (true);
 
 			int c = 0;
 			for(c = 0;c < pointList.Count; c++) {
@@ -253,7 +265,7 @@ public class LSystem : MonoBehaviour {
 					}
 					for (int i = 0; i < interpolate; i++) {
 						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpolate))));//interpolate points
-						Debug.Log((vm1 + (v-vm1) * (((float)i) / ((float)interpolate))));
+						// Debug.Log((vm1 + (v-vm1) * (((float)i) / ((float)interpolate))));
 					}
 				}
 				else if(c==1)
