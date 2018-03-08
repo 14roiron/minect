@@ -218,9 +218,13 @@ public class LSystem : MonoBehaviour {
 			} else {
 				currentPointsList = pointList;
 			}
-
-			currentPointsList.Add(node.SourceNode);
-			currentPointsList.Add(node.EndNode);
+			if(!Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 1])){
+					//only if it's different from the last point, to prevent two equals points in the list.
+					if(!Vector3.Equals(node.SourceNode,currentPointsList[currentPointsList.Count - 1])){
+						currentPointsList.Add(node.SourceNode);
+					}
+				currentPointsList.Add(node.EndNode);
+			}
 			CreateTreeLines (node.Children, currentPointsList);
 		}
 
