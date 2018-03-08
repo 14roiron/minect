@@ -69,14 +69,18 @@ public class TransformInfo {
 public class LSystem : MonoBehaviour {
 	public enum TreeType {
 		Version1,
-		Version2
+		Version2,
+		Version3
 	}
 
 	public TreeType treeType;
 	public float turnAngle = 25.0f;
-	private float branchLength = 0.5f;
-	[Range(0, 4)]
+	[Range(1, 4)]
 	public int totalIterations = 2;
+	public float branchLength = 0.5f;
+	[Range(0, 1)]
+	public float lenghtMultiplier = 1;
+	public GameObject AnimatedLine;
 
 	private string encodedTree;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
@@ -84,26 +88,30 @@ public class LSystem : MonoBehaviour {
 	private Stack<TransformInfo> transformStack = new Stack<TransformInfo> ();
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
-	public GameObject AnimatedLine;
 	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
-
 
 	// Use this for initialization
 	void Start () {
+		AnimatedLine.SetActive (false);
+
 		if (treeType == TreeType.Version1) {
 			rules.Add ('F', "FF+[+F-F-F]-[-F+F+F]");
 			encodedTree = "F";
-		}
-		else if (treeType == TreeType.Version2) {
-			rules.Add ('F', "FF+[+F-F-F]-[-F+F++F]");
+		} else if (treeType == TreeType.Version2) {
+			rules.Add ('X', "F[-X][X]F[-X]+FX");
+			rules.Add ('F', "FF");
+			encodedTree = "X";
+		} else if (treeType == TreeType.Version3) {
+			rules.Add ('F', "FF[+FF+F][-FF-F]");
 			encodedTree = "F";
-//			rules.Add ('X', "F[-X][X]F[-X]+FX");
-//			rules.Add ('F', "FF");
 		}
 
+		NodeToDraw = new Node (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), null);
 		GenerateString ();
-		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
+		Debug.Log (encodedTree);
+
 		StartCoroutine (DrawTree ());
+		// DrawTree ();
 	}
 
 	// Update is called once per frame
@@ -124,27 +132,30 @@ public class LSystem : MonoBehaviour {
 		}
 	}
 
-	IEnumerator DrawTree() {
-		Debug.Log ("Drawing in coroutine");
+	//void DrawTree () {
+	IEnumerator DrawTree () {
 		Node currentNode = NodeToDraw;
+		float currentBranchLength = branchLength;
+		TransformInfo originalTransform = new TransformInfo (gameObject.transform.position, gameObject.transform.rotation);
 		foreach (char c in encodedTree) {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
-				transform.Translate (Vector3.up * branchLength);
-				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				transform.Translate (Vector3.up * currentBranchLength);
+				// Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
-				//yield return new WaitForSeconds (pauseTime/10000);
 			}
 			else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
 				transform.Rotate (Vector3.right * -turnAngle);
 			else if (c == '[') {
+				currentBranchLength *= lenghtMultiplier;
 				transformStack.Push (new TransformInfo (transform.position, transform.rotation));
 				nodeStack.Push (new Node (transform.position, currentNode));
 			}
 			else if (c == ']') {
+				currentBranchLength /= lenghtMultiplier;
 				TransformInfo ti = transformStack.Pop ();
 				transform.position = ti.position;
 				transform.rotation = ti.rotation;
@@ -153,12 +164,14 @@ public class LSystem : MonoBehaviour {
 		}
 		Debug.Log ("Depth: " + NodeToDraw.Depth());
 		Debug.Log ("Nodes: " + NodeToDraw.NumberOfNodes());
+		gameObject.transform.position = originalTransform.position;
+		gameObject.transform.rotation = originalTransform.rotation;
+
 		//lineraze the node tree
 		initDrawTreeLines ();
 		//Draw it
 		DrawTreeLines ();
 		yield return 0;
-
 	}
 
 	/*
@@ -250,19 +263,17 @@ public class LSystem : MonoBehaviour {
 	void DrawTreeLines()
 	{
 		int count = 0;
-		foreach (List<Vector3> pointsListe in this.MainPointsList) {
-
-
+		foreach (List<Vector3> pointList in this.MainPointsList) {
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
-				ALR = Instantiate (AnimatedLine,gameObject.transform);
+				ALR = Instantiate (AnimatedLine, gameObject.transform);
 			} else {
 				ALR = AnimatedLine;
 			}
+			ALR.SetActive (true);
 
-	
-			int c=0;
-			for(c=0;c<pointsListe.Count;c++) {
+			int c = 0;
+			for(c = 0;c < pointList.Count; c++) {
 				Vector3 v;
 				Vector3 vm1;
 				int interpole = 2;
@@ -278,13 +289,10 @@ public class LSystem : MonoBehaviour {
 					}
 				}
 				else if(c==1)
-					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
-
+					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointList[0]);
 			}
 			count++;
-
 		}
 		return;
 	}
-
 }
