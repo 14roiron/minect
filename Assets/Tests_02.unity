@@ -3994,9 +3994,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeType: 0
   turnAngle: 25
-  totalIterations: 2
+  totalIterations: 3
   branchLength: 0.5
-  lenghtMultiplier: 1
+  lenghtMultiplier: 0.897
   AnimatedLine: {fileID: 1782208302}
 --- !u!1 &1473345867
 GameObject:
@@ -4095,14 +4095,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xTrajectory: 1
-  xFreq: 0.5
-  xAmpli: 3
-  yTrajectory: 1
+  xFreq: 0.03
+  xAmpli: 7
+  yTrajectory: 3
   yFreq: 0.2
   yAmpli: 2
   zTrajectory: 2
-  zFreq: 0.5
-  zAmpli: 3
+  zFreq: 0.03
+  zAmpli: 7
 --- !u!1 &1782208302
 GameObject:
   m_ObjectHideFlags: 0
