@@ -301,7 +301,8 @@ public class LSystem : MonoBehaviour {
 		foreach (List<Vector3> pointList in this.MainPointsList) {
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
-				ALR = Instantiate (AnimatedLine, gameObject.transform);
+				ALR = Instantiate (AnimatedLine);
+				ALR.transform.parent = gameObject.transform;
 			} else {
 				ALR = AnimatedLine;
 			}
