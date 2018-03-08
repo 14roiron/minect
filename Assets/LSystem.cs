@@ -86,7 +86,7 @@ public class LSystem : MonoBehaviour {
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
 	public GameObject AnimatedLine;
-	List<List<Vector3>> MainPointsList = new List<List<Vector3
+	List<List<Vector3>> MainPointsList = new List<List<Vector3>>();
 	void DrawTree() {
 		float pauseTime = drawTime / result.Length;
 		Node currentNode = NodeToDraw;
@@ -176,10 +176,21 @@ public class LSystem : MonoBehaviour {
 			currentPointsList.Add(node.EndNode);
 			CreateTreeLines (node.Children, currentPointsList);
 		}
+
+		//clean loop
+		foreach (List<Vector3> nodes in MainPointsList) {
+			for(int i=2; i<nodes.Count;i++)
+			{
+				if (Vector3.Equals (nodes [i], nodes [i - 2])){ ///&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
+					nodes.RemoveAt(i-1); //test the linearization
+					nodes.RemoveAt(i-2); //test the linearization
+				}
+			}
+		}
 	}
 	/**
 	 *  
-	 * 
+	 * Draw the graph
 	 */
 	void DrawTreeLines()
 	{
@@ -193,13 +204,8 @@ public class LSystem : MonoBehaviour {
 			} else {
 				ALR = AnimatedLine;
 			}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-			foreach (Vector3 v in pointsListe) {
-				ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (v);
-=======
-=======
->>>>>>> master
+
+	
 			int c=0;
 			for(c=0;c<pointsListe.Count;c++) {
 				Vector3 v;
@@ -210,19 +216,13 @@ public class LSystem : MonoBehaviour {
 					vm1 = pointsListe [c-1];
 					for (int i = 0; i < interpole; i++) {
 						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
-<<<<<<< HEAD
 						Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
-=======
->>>>>>> master
 					}
 				}
 				else if(c==1)
 					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
 				
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> master
+
 			}
 			count++;
 
