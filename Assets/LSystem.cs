@@ -113,6 +113,7 @@ public class LSystem : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		AnimatedLine = new GameObject ();
+		AnimatedLine.name = "Branch";
 		AnimatedLine.transform.parent = gameObject.transform;
 		LineRenderer lr = AnimatedLine.AddComponent<LineRenderer>() as LineRenderer;
 		lr.material = new Material(Shader.Find("Particles/Alpha Blended"));
