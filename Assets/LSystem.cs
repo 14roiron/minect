@@ -144,7 +144,7 @@ public class LSystem : MonoBehaviour {
 				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				//Node.copyVect (transform.position, currentNode.EndNode);
-				//currentNode.EndNode = transform.position;
+				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
 
 				//yield return new WaitForSeconds (pauseTime/10000);
