@@ -184,10 +184,11 @@ public class LSystem : MonoBehaviour {
 		foreach (List<Vector3> nodes in MainPointsList) {
 			for(int i=2; i<nodes.Count;i++)
 			{
-				if (Vector3.Equals (nodes [i], nodes [i - 2])){ ///&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
+				if  (nodes [i] == nodes [i - 2]){ //&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
 					nodes.RemoveAt(i-1); //test the linearization
 					nodes.RemoveAt(i-2); //test the linearization
 					debug1++;
+					i = 2;
 				}
 			}
 		}
@@ -205,6 +206,8 @@ public class LSystem : MonoBehaviour {
 	void CreateTreeLines(List<Node> NodesToDraw,List<Vector3> pointList)
 	{
 		int count = 0;
+		Vector3 previousPoint;
+		Vector3 ppreviousPoint;
 		foreach (Node node in NodesToDraw) {
 			count++;
 
@@ -221,13 +224,21 @@ public class LSystem : MonoBehaviour {
 			} else {
 				currentPointsList = pointList;
 			}
-			if(!Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 1])  && !Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 2]) ){
+
+			previousPoint = currentPointsList[currentPointsList.Count - 1];
+			ppreviousPoint = currentPointsList[currentPointsList.Count - 2];
+			if (Vector3.Equals (node.EndNode, ppreviousPoint)) { //loop detection
+				currentPointsList.RemoveAt(currentPointsList.Count - 1);
+
+			}
+			else if(!Vector3.Equals(node.EndNode,previousPoint)){
 					//only if it's different from the last point, to prevent two equals points in the list.
-					if(!Vector3.Equals(node.SourceNode,currentPointsList[currentPointsList.Count - 1])){
+				if(!Vector3.Equals(node.SourceNode,previousPoint)){ 
 						currentPointsList.Add(node.SourceNode);
 					}
 				currentPointsList.Add(node.EndNode);
 			}
+
 			CreateTreeLines (node.Children, currentPointsList);
 		}
 
@@ -254,7 +265,7 @@ public class LSystem : MonoBehaviour {
 			for(c=0;c<pointsListe.Count;c++) {
 				Vector3 v;
 				Vector3 vm1;
-				int interpole = 10;
+				int interpole = 2;
 				if (c != pointsListe.Count-1 && c != 0) {
 					v = pointsListe [c];
 					vm1 = pointsListe [c-1];
