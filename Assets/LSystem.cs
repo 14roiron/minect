@@ -51,6 +51,13 @@ public class Node{
 			return;
 		this.Parent.Children.Add(this);
 	}
+	public static int totalNode(List<List<Vector3>> Mainlist)
+	{
+		int total=0;
+		foreach (List<Vector3> list in Mainlist)
+			total += list.Count;
+		return total;
+	}
 }
 
 
@@ -190,6 +197,7 @@ public class LSystem : MonoBehaviour {
 		}
 		Debug.Log ("Depth: " + NodeToDraw.Depth());
 		Debug.Log ("Nodes: " + NodeToDraw.NumberOfNodes());
+
 		gameObject.transform.position = originalTransform.position;
 		gameObject.transform.rotation = originalTransform.rotation;
 
@@ -197,6 +205,7 @@ public class LSystem : MonoBehaviour {
 		initDrawTreeLines ();
 		//Draw it
 		DrawTreeLines ();
+		Debug.Log ("total points: " + Node.totalNode(MainPointsList));
 		yield return 0;
 	}
 

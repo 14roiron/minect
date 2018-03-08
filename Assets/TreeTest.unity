@@ -389,10 +389,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MinimumDistance: 0
-  SecondsPerLine: 0.001
+  SecondsPerLine: 0.2
   StartColor: {r: 0.39705884, g: 0.317486, b: 0.17517301, a: 1}
   EndColor: {r: 0.38504508, g: 0.66176474, b: 0.014597765, a: 1}
-  StartWidth: 0.1
+  StartWidth: 0.5
   EndWidth: 0.01
   SortLayerName: Default
   OrderInSortLayer: 1
@@ -533,6 +533,8 @@ MonoBehaviour:
   totalIterations: 3
   branchLength: 0.5
   lenghtMultiplier: 1
+  AnimatedLine: {fileID: 948002747}
+--- !u!4 &1161815312
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
