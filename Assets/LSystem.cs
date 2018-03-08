@@ -108,13 +108,13 @@ public class LSystem : MonoBehaviour {
 		result = axiom;
 		GenerateString ();
 		NodeToDraw = new Node (new Vector3 (0.0f, 0.0f, 0.0f), null);
-		DrawTree ();
+		StartCoroutine (DrawTree ());
 	}
 
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	void GenerateString () {
@@ -134,7 +134,7 @@ public class LSystem : MonoBehaviour {
 //		}
 	}
 
-	void DrawTree() {
+	IEnumerator DrawTree() {
 		float pauseTime = drawTime / result.Length;
 		Node currentNode = NodeToDraw;
 		foreach (char c in result) {
@@ -146,8 +146,13 @@ public class LSystem : MonoBehaviour {
 				//Node.copyVect (transform.position, currentNode.EndNode);
 				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
+<<<<<<< HEAD
+
+				//yield return new WaitForSeconds (pauseTime/10000);
+=======
 		
 				//yield return new WaitForSeconds (pauseTime);
+>>>>>>> 8604ff11565afd9a80390079de32c21141be464a
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -169,6 +174,7 @@ public class LSystem : MonoBehaviour {
 		initDrawTreeLines ();
 		//Draw it
 		DrawTreeLines ();
+		yield return 0;
 
 	}
 
@@ -179,7 +185,7 @@ public class LSystem : MonoBehaviour {
 	 * each list end by a vertice
 	 */ 
 	void initDrawTreeLines() {
-		AnimatedLineRenderer lineRenderer = 
+		AnimatedLineRenderer lineRenderer =
 			AnimatedLine.GetComponent<AnimatedLineRenderer>();
 
 		lineRenderer.Enqueue(NodeToDraw.SourceNode);
@@ -214,7 +220,7 @@ public class LSystem : MonoBehaviour {
 						currentPointsList.Add(new Vector3(item.x,item.y,item.z));
 					});
 				MainPointsList.Add (currentPointsList);
-				
+
 			} else {
 				currentPointsList = pointList;
 			}
@@ -243,7 +249,7 @@ public class LSystem : MonoBehaviour {
 	{
 		int count = 0;
 		foreach (List<Vector3> pointsListe in this.MainPointsList) {
-			
+
 
 			GameObject ALR;
 			if (count != this.MainPointsList.Count) {
@@ -271,7 +277,10 @@ public class LSystem : MonoBehaviour {
 				}
 				else if(c==1)
 					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
+<<<<<<< HEAD
+=======
 				
+>>>>>>> 8604ff11565afd9a80390079de32c21141be464a
 
 			}
 			count++;
