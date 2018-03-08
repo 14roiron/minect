@@ -133,6 +133,8 @@ public class LSystem : MonoBehaviour {
 			if (c == 'F') {
 				Vector3 initialPosition = transform.position;
 				transform.Translate (Vector3.up * branchLength);
+				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
+				currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
 				//yield return new WaitForSeconds (pauseTime/10000);
 			}
