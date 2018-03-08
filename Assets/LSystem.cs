@@ -88,23 +88,23 @@ public class LSystem : MonoBehaviour {
 	[Range(0, 1)]
 	public float lenghtMultiplier = 1;
 
-//	[Tooltip("The minimum distance that must be in between line segments (0 for infinite). Attempts to make lines with distances smaller than this will fail.")]
-//	public float MinimumDistance = 0.0f;
-//	[Tooltip("Seconds that each new line segment should animate with")]
-//	public float SecondsPerLine = 0.1f;
-//	[Tooltip("Start color for the line renderer since Unity does not provider a getter for this")]
-//	public Color StartColor = Color.white;
-//	[Tooltip("End color for the line renderer since Unity does not provide a getter for this")]
-//	public Color EndColor = Color.white;
-//	[Tooltip("Start line width")]
-//	public float StartWidth = 2.0f;
-//	[Tooltip("End line width")]
-//	public float EndWidth = 2.0f;
+	[Tooltip("The minimum distance that must be in between line segments (0 for infinite). Attempts to make lines with distances smaller than this will fail.")]
+	public float MinimumDistance = 0.0f;
+	[Tooltip("Seconds that each new line segment should animate with")]
+	public float SecondsPerLine = 0.1f;
+	[Tooltip("Start color for the line renderer since Unity does not provider a getter for this")]
+	public Color StartColor = Color.white;
+	[Tooltip("End color for the line renderer since Unity does not provide a getter for this")]
+	public Color EndColor = Color.white;
+	[Tooltip("Start line width")]
+	public float StartWidth = 0.5f;
+	[Tooltip("End line width")]
+	public float EndWidth = 0.1f;
 
 	private string encodedTree;
 	private Dictionary<char, string> rules = new Dictionary<char, string> ();
 
-	public GameObject AnimatedLine;
+	private GameObject AnimatedLine;
 	private Stack<TransformInfo> transformStack = new Stack<TransformInfo> ();
 	private Stack<Node> nodeStack = new Stack<Node> ();
 	private Node NodeToDraw;
@@ -112,20 +112,21 @@ public class LSystem : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-//		AnimatedLine = new GameObject ();
-//		AnimatedLine.transform.parent = gameObject.transform;
-//		LineRenderer lr = AnimatedLine.AddComponent<LineRenderer>() as LineRenderer;
-//		//lr.material = new Material (Shader.Find ("Particles/Additive"));
-//		AnimatedLineRenderer alr = AnimatedLine.AddComponent<AnimatedLineRenderer>() as AnimatedLineRenderer;
-//		alr.MinimumDistance = MinimumDistance;
-//		alr.SecondsPerLine = SecondsPerLine;
-//		alr.StartColor = StartColor;
-//		alr.EndColor = EndColor;
-//		alr.StartWidth = StartWidth;
-//		alr.EndWidth = EndWidth;
-//		alr.SortLayerName = "Default";
-//		alr.OrderInSortLayer = 1;
-		//AnimatedLine.SetActive (false);
+		AnimatedLine = new GameObject ();
+		AnimatedLine.name = "Branch";
+		AnimatedLine.transform.parent = gameObject.transform;
+		LineRenderer lr = AnimatedLine.AddComponent<LineRenderer>() as LineRenderer;
+		lr.material = new Material(Shader.Find("Particles/Alpha Blended"));
+		AnimatedLineRenderer alr = AnimatedLine.AddComponent<AnimatedLineRenderer>() as AnimatedLineRenderer;
+		alr.MinimumDistance = MinimumDistance;
+		alr.SecondsPerLine = SecondsPerLine;
+		alr.StartColor = StartColor;
+		alr.EndColor = EndColor;
+		alr.StartWidth = StartWidth;
+		alr.EndWidth = EndWidth;
+		alr.SortLayerName = "Default";
+		alr.OrderInSortLayer = 1;
+		AnimatedLine.SetActive (false);
 
 		if (treeType == TreeType.Version1) {
 			rules.Add ('F', "FF+[+F-F-F]-[-F+F+F]");
