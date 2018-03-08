@@ -51,6 +51,13 @@ public class Node{
 			return;
 		this.Parent.Children.Add(this);
 	}
+	public static int totalNode(List<List<Vector3>> Mainlist)
+	{
+		int total=0;
+		foreach (List<Vector3> list in Mainlist)
+			total += list.Count;
+		return total;
+	}
 }
 
 
@@ -164,6 +171,7 @@ public class LSystem : MonoBehaviour {
 		}
 		Debug.Log ("Depth: " + NodeToDraw.Depth());
 		Debug.Log ("Nodes: " + NodeToDraw.NumberOfNodes());
+
 		gameObject.transform.position = originalTransform.position;
 		gameObject.transform.rotation = originalTransform.rotation;
 
@@ -171,6 +179,7 @@ public class LSystem : MonoBehaviour {
 		initDrawTreeLines ();
 		//Draw it
 		DrawTreeLines ();
+		Debug.Log ("total points: " + Node.totalNode(MainPointsList));
 		yield return 0;
 	}
 
@@ -277,9 +286,9 @@ public class LSystem : MonoBehaviour {
 				Vector3 v;
 				Vector3 vm1;
 				int interpole = 1;
-				if (c != pointsListe.Count-1 && c != 0) {
-					v = pointsListe [c];
-					vm1 = pointsListe [c-1];
+				if (c != pointList.Count-1 && c != 0) {
+					v = pointList [c];
+					vm1 = pointList [c-1];
 					if (Vector3.Equals (v, vm1)) { //if the values are equals, not going to interpolate
 						continue;
 					}
