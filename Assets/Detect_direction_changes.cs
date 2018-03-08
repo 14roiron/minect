@@ -64,10 +64,11 @@ public class RotVelocityArray {
 			currentPos = _positionArray[getNextI(i)];
 				if(maxY < currentPos.y) {
 					maxY = currentPos.y;
-					indexMax = i;
+					
 				}
 				if(minY > currentPos.y) {
 					minY = currentPos.y;
+					indexMax = i;
 				}
 		}
 		_range = maxY - minY;
@@ -157,8 +158,10 @@ public class Detect_direction_changes : MonoBehaviour {
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
-				particles.transform.position=rotArray.getMaxPosition();
-				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
+				Vector3 max = rotArray.getMaxPosition ();
+				max.y = 0;//-max.z;
+				particles.transform.position=max;
+				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
 
 //				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
@@ -167,9 +170,9 @@ public class Detect_direction_changes : MonoBehaviour {
 
 
 				tree.GetComponent<LSystem>().enabled = true;
-				tree.transform.position=rotArray.getMaxPosition();
+				tree.transform.position=max;
 				//tree.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
-				Debug.Break();
+				//Debug.Break();
 			}
 		}
 	}

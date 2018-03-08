@@ -174,7 +174,7 @@ public class LSystem : MonoBehaviour {
 			if (c == 'F') {
 				Vector3 initialPosition = gameObject.transform.position;
 				gameObject.transform.Translate (Vector3.up * currentBranchLength);
-				Debug.DrawLine (initialPosition, gameObject.transform.position, Color.white, 100000f, false);
+				//Debug.DrawLine (initialPosition, gameObject.transform.position, Color.white, 100000f, false);
 				currentNode.EndNode = gameObject.transform.position;
 				currentNode = new Node (gameObject.transform.position, currentNode);
 			}
