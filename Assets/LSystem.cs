@@ -261,6 +261,9 @@ public class LSystem : MonoBehaviour {
 				if (c != pointsListe.Count-1 && c != 0) {
 					v = pointsListe [c];
 					vm1 = pointsListe [c-1];
+					if (Vector3.Equals (v, vm1)) { //if the values are equals, not going to interpolate
+						continue;
+					}
 					for (int i = 0; i < interpole; i++) {
 						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
 						Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
