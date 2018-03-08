@@ -151,8 +151,8 @@ public class LSystem : MonoBehaviour {
 				currentNode = nodeStack.Pop ();
 			}
 		}
-		Debug.Log (NodeToDraw.Depth());
-		Debug.Log (NodeToDraw.NumberOfNodes());
+		Debug.Log ("Depth: " + NodeToDraw.Depth());
+		Debug.Log ("Nodes: " + NodeToDraw.NumberOfNodes());
 		//lineraze the node tree
 		initDrawTreeLines ();
 		//Draw it
@@ -178,6 +178,20 @@ public class LSystem : MonoBehaviour {
 		MainPointsList [0].Add (NodeToDraw.EndNode);
 
 		CreateTreeLines (NodeToDraw.Children, MainPointsList[0]);
+
+		int debug1 = 0;
+		//clean loop
+		foreach (List<Vector3> nodes in MainPointsList) {
+			for(int i=2; i<nodes.Count;i++)
+			{
+				if (Vector3.Equals (nodes [i], nodes [i - 2])){ ///&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
+					nodes.RemoveAt(i-1); //test the linearization
+					nodes.RemoveAt(i-2); //test the linearization
+					debug1++;
+				}
+			}
+		}
+		Debug.Log ("points remove:" + debug1);
 	}
 
 	/**
@@ -207,7 +221,7 @@ public class LSystem : MonoBehaviour {
 			} else {
 				currentPointsList = pointList;
 			}
-			if(!Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 1])){
+			if(!Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 1])  && !Vector3.Equals(node.EndNode,currentPointsList[currentPointsList.Count - 2]) ){
 					//only if it's different from the last point, to prevent two equals points in the list.
 					if(!Vector3.Equals(node.SourceNode,currentPointsList[currentPointsList.Count - 1])){
 						currentPointsList.Add(node.SourceNode);
@@ -217,16 +231,6 @@ public class LSystem : MonoBehaviour {
 			CreateTreeLines (node.Children, currentPointsList);
 		}
 
-		//clean loop
-		foreach (List<Vector3> nodes in MainPointsList) {
-			for(int i=2; i<nodes.Count;i++)
-			{
-				if (Vector3.Equals (nodes [i], nodes [i - 2])){ ///&& Vector3.Equals (nodes [i - 1].SourceNode, nodes [i].EndNode)) {
-					nodes.RemoveAt(i-1); //test the linearization
-					nodes.RemoveAt(i-2); //test the linearization
-				}
-			}
-		}
 	}
 	/**
 	 *  
@@ -259,7 +263,7 @@ public class LSystem : MonoBehaviour {
 					}
 					for (int i = 0; i < interpole; i++) {
 						ALR.GetComponent<AnimatedLineRenderer> ().Enqueue ((vm1 + (v-vm1) * (((float)i)/((float)interpole))));//interpolate points
-						Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
+						//Debug.Log((vm1 + (v-vm1) * (((float)i)/((float)interpole))));
 					}
 				}
 				else if(c==1)
