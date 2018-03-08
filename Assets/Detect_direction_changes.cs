@@ -158,7 +158,7 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.transform.position=rotArray.getMaxPosition();
 				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
 
-				gameObject.GetComponent<LSystemGenerator>().enabled = true;
+//				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
 				currentTrailRenderer.time = 20;
 				currentTrailRenderer.autodestruct = true;

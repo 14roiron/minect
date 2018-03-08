@@ -144,15 +144,11 @@ public class LSystem : MonoBehaviour {
 				//Debug.DrawLine (initialPosition, transform.position, Color.white, 100000f, false);
 				//Node.copyVect (initialPosition, currentNode.SourceNode);
 				//Node.copyVect (transform.position, currentNode.EndNode);
-				currentNode.EndNode = transform.position;
+				//currentNode.EndNode = transform.position;
 				currentNode = new Node (transform.position, currentNode);
-<<<<<<< HEAD
 
 				//yield return new WaitForSeconds (pauseTime/10000);
-=======
-		
-				//yield return new WaitForSeconds (pauseTime);
->>>>>>> 8604ff11565afd9a80390079de32c21141be464a
+
 			} else if (c == '+')
 				transform.Rotate (Vector3.right * turnAngle);
 			else if (c == '-')
@@ -277,10 +273,6 @@ public class LSystem : MonoBehaviour {
 				}
 				else if(c==1)
 					ALR.GetComponent<AnimatedLineRenderer> ().Enqueue (pointsListe[0]);
-<<<<<<< HEAD
-=======
-				
->>>>>>> 8604ff11565afd9a80390079de32c21141be464a
 
 			}
 			count++;
