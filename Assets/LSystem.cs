@@ -77,7 +77,8 @@ public class LSystem : MonoBehaviour {
 	public enum TreeType {
 		Version1,
 		Version2,
-		Version3
+		Version3,
+		Triangle
 	}
 
 	public TreeType treeType;
@@ -132,11 +133,18 @@ public class LSystem : MonoBehaviour {
 			encodedTree = "F";
 		} else if (treeType == TreeType.Version2) {
 			rules.Add ('X', "F[-X][X]F[-X]+FX");
-			rules.Add ('F', "FF");
+			rules.Add ('F', "FF");	
 			encodedTree = "X";
 		} else if (treeType == TreeType.Version3) {
 			rules.Add ('F', "FF[+FF+F][-FF-F]");
 			encodedTree = "F";
+		} else if (treeType == TreeType.Triangle) {
+			rules.Add ('F', "F-G+F+G-F");
+			rules.Add ('G', "GG");
+			encodedTree = "F-G-G";
+			minTurnAngle = 120f;
+			maxTurnAngle = 120f;
+			alr.EndWidth = alr.StartWidth;
 		}
 
 		NodeToDraw = new Node (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), null);
@@ -171,7 +179,7 @@ public class LSystem : MonoBehaviour {
 		float currentBranchLength = branchLength;
 		TransformInfo originalTransform = new TransformInfo (gameObject.transform.position, gameObject.transform.rotation);
 		foreach (char c in encodedTree) {
-			if (c == 'F') {
+			if (c == 'F' || c == 'G') {
 				Vector3 initialPosition = gameObject.transform.position;
 				gameObject.transform.Translate (Vector3.up * currentBranchLength);
 				//Debug.DrawLine (initialPosition, gameObject.transform.position, Color.white, 100000f, false);
