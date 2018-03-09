@@ -225,15 +225,16 @@ public class Detect_direction_changes : MonoBehaviour {
 				particles.SetActive (true);
 				Vector3 max = rotArray.getMaxPosition ();
 				max.y = 0;//-max.z;
-				particles.transform.position=max;
-				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
+				max = max + rotArray.getPlanProjection ();
+				particles.transform.position = max;
+				particles.transform.rotation = Quaternion.LookRotation(Vector3.up);
+//				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
 
 //				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
 				currentTrailRenderer.time = 20;
 				currentTrailRenderer.autodestruct = true;
 				//max.y = 0;//-max.z;
-				max = max + rotArray.getPlanProjection ();
 
 				tree.GetComponent<LSystem>().enabled = true;
 				tree.transform.position=max;
