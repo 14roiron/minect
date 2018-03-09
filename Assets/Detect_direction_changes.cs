@@ -11,15 +11,12 @@ public class RotVelocityArray {
 	private int _indexMaxY;
 	private float _range;
 	private bool isfull;
-	private float _rangeSet;
 
-
-	public RotVelocityArray(int size,float rangeSet){
+	public RotVelocityArray(int size){
 		_size = size;
 		_positionArray = new Vector3[size];
 		_velocityArray = new Vector3[size];
 		_timeArray = new float[size];
-		_rangeSet = rangeSet;
 		for (int i = 0; i < size; i++)
 		{
 				_positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
@@ -79,7 +76,7 @@ public class RotVelocityArray {
 
 		 //get the max position
 		timepourcentage = (_timeArray[getNextI(indexMax)] - _timeArray[getNextI(0)]) / (_timeArray[getNextI(_size-1)] - _timeArray[getNextI(0)]);
-		if(_range > 0.5 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
+		if(_range > 0.25 && timepourcentage > 0.4 && timepourcentage < 0.85 ) return true;
 		else return false;
 	}
 
@@ -129,9 +126,9 @@ public class RotVelocityArray {
 
 				intersection = linePoint + vector;
 
-				//Debug.DrawLine (linePoint, linePoint + lineVec.normalized,Color.white, 100000f, false);
-				//Debug.DrawLine (linePoint, intersection,Color.green, 100000f, false);
-				//Debug.DrawLine (planePoint, planeNormal,Color.blue, 100000f, false);
+				Debug.DrawLine (linePoint, linePoint + lineVec.normalized,Color.white, 100000f, false);
+				Debug.DrawLine (linePoint, intersection,Color.green, 100000f, false);
+				Debug.DrawLine (planePoint, planeNormal,Color.blue, 100000f, false);
 				return vector;
 			}
 
@@ -148,12 +145,11 @@ public class RotVelocityArray {
 
 public class Detect_direction_changes : MonoBehaviour {
 
-	private bool changeDetected;
+	public bool changeDetected;
 	public GameObject particles;
 	public GameObject tree;
 	public GameObject handTransfrom;
-	public float particlesLifeTime;
-	public float treeLifeTime = 20f;
+	public float pauseTime;
 
 //	public LSystem.TreeType treeType;
 //	public float minTurnAngle = 15.0f;
@@ -173,7 +169,6 @@ public class Detect_direction_changes : MonoBehaviour {
 //	private GameObject Tree;
 
 	public GameObject Tree;
-	public float rangeSet=0.3f;
 
 	private RotVelocityArray rotArray;
 
@@ -192,7 +187,9 @@ public class Detect_direction_changes : MonoBehaviour {
 		}
 
 		changeDetected = false;
-		rotArray = new RotVelocityArray(50,rangeSet);
+		rotArray = new RotVelocityArray(50);
+		lastChangeTime = 0;
+
 		lastChangeTime = 0;
 	}
 
@@ -201,18 +198,17 @@ public class Detect_direction_changes : MonoBehaviour {
 		rotArray.append (gameObject.transform.position);
 
 		if (changeDetected) {
-			if (Time.time > particlesLifeTime + lastChangeTime) {
+			if (Time.time > pauseTime + lastChangeTime) {
 				changeDetected = false;
 				particles.SetActive (false);
 				gameObject.GetComponent<Detect_direction_changes>().enabled = false;
+
+
 			}
 		}
 		else {
 
 			gameObject.transform.position = handTransfrom.transform.position;
-			Vector3 a = gameObject.transform.position; 
-			a.z = -a.z;
-			gameObject.transform.position = a;
 
 			if(rotArray.getRangeMax ()) {
 				//currentTransform = Instantiate(gameObject.transform);
@@ -228,19 +224,18 @@ public class Detect_direction_changes : MonoBehaviour {
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
 				Vector3 max = rotArray.getMaxPosition ();
-
-				max = max + rotArray.getPlanProjection ();
-				max.y = 0;//-max.z;
 				particles.transform.position = max;
-				particles.transform.rotation = Quaternion.LookRotation(Vector3.up);
-//				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
+//				particles.transform.rotation = Quaternion.LookRotation(Vector3.up);
+				particles.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);
+				max.y = 0;//-max.z;
+				max = max + rotArray.getPlanProjection ();
 
 //				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
-				currentTrailRenderer.time = treeLifeTime;
+				currentTrailRenderer.time = 20;
+				currentTrailRenderer.Clear ();
 				currentTrailRenderer.autodestruct = true;
-
-				//max.y = 0;//-max.z;
+				max.y = 0;//-max.z;
 
 				tree.GetComponent<LSystem>().enabled = true;
 				tree.transform.position=max;
