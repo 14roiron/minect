@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.5748171, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 2afecffd3722002488be8c82ccf5dc13, type: 2}
+  - {fileID: 2100000, guid: 04bcfb69e02064e67a4ad52f82f0c411, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -308,11 +308,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c913b37e2b7593e40ba898833ad531b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeDetected: 0
   particles: {fileID: 1041183326}
   tree: {fileID: 1261249090}
   handTransfrom: {fileID: 1473345867}
-  pauseTime: 5
+  pauseTime: 10
+  treeLifeTime: 5
   Tree: {fileID: 0}
 --- !u!96 &848593367
 TrailRenderer:
@@ -3973,12 +3973,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treeType: 0
-  minTurnAngle: 20
-  maxTurnAngle: 30
-  totalIterations: 3
-  branchLength: 0.5
-  lenghtMultiplier: 0.897
-  SecondsPerLine: 0.1
+  minTurnAngle: 15
+  maxTurnAngle: 35
+  totalIterations: 2
+  branchLength: 0.3
+  lenghtMultiplier: 0.877
+  SecondsPerLine: 0.05
   StartColor: {r: 0.553, g: 0.30147058, b: 0, a: 1}
   EndColor: {r: 0.041650057, g: 0.36764705, b: 0, a: 1}
   StartWidth: 0.5

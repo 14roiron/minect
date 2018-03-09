@@ -126,9 +126,9 @@ public class RotVelocityArray {
 
 				intersection = linePoint + vector;
 
-				Debug.DrawLine (linePoint, linePoint + lineVec.normalized,Color.white, 100000f, false);
-				Debug.DrawLine (linePoint, intersection,Color.green, 100000f, false);
-				Debug.DrawLine (planePoint, planeNormal,Color.blue, 100000f, false);
+				//Debug.DrawLine (linePoint, linePoint + lineVec.normalized,Color.white, 100000f, false);
+				//Debug.DrawLine (linePoint, intersection,Color.green, 100000f, false);
+				//Debug.DrawLine (planePoint, planeNormal,Color.blue, 100000f, false);
 				return vector;
 			}
 
@@ -145,11 +145,12 @@ public class RotVelocityArray {
 
 public class Detect_direction_changes : MonoBehaviour {
 
-	public bool changeDetected;
+	private bool changeDetected;
 	public GameObject particles;
 	public GameObject tree;
 	public GameObject handTransfrom;
-	public float pauseTime;
+	public float particlesLifeTime;
+	public float treeLifeTime = 20f;
 
 //	public LSystem.TreeType treeType;
 //	public float minTurnAngle = 15.0f;
@@ -189,8 +190,6 @@ public class Detect_direction_changes : MonoBehaviour {
 		changeDetected = false;
 		rotArray = new RotVelocityArray(50);
 		lastChangeTime = 0;
-
-		lastChangeTime = 0;
 	}
 
 	// Update is called once per frame
@@ -198,17 +197,18 @@ public class Detect_direction_changes : MonoBehaviour {
 		rotArray.append (gameObject.transform.position);
 
 		if (changeDetected) {
-			if (Time.time > pauseTime + lastChangeTime) {
+			if (Time.time > particlesLifeTime + lastChangeTime) {
 				changeDetected = false;
 				particles.SetActive (false);
 				gameObject.GetComponent<Detect_direction_changes>().enabled = false;
-
-
 			}
 		}
 		else {
 
 			gameObject.transform.position = handTransfrom.transform.position;
+			Vector3 a = gameObject.transform.position; 
+			a.z = -a.z;
+			gameObject.transform.position = a;
 
 			if(rotArray.getRangeMax ()) {
 				//currentTransform = Instantiate(gameObject.transform);
@@ -224,16 +224,18 @@ public class Detect_direction_changes : MonoBehaviour {
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
 				Vector3 max = rotArray.getMaxPosition ();
-				max.y = 0;//-max.z;
+
 				max = max + rotArray.getPlanProjection ();
+				max.y = 0;//-max.z;
 				particles.transform.position = max;
 				particles.transform.rotation = Quaternion.LookRotation(Vector3.up);
 //				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
 
 //				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
-				currentTrailRenderer.time = 20;
+				currentTrailRenderer.time = treeLifeTime;
 				currentTrailRenderer.autodestruct = true;
+
 				//max.y = 0;//-max.z;
 
 				tree.GetComponent<LSystem>().enabled = true;
