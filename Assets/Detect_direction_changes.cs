@@ -11,12 +11,15 @@ public class RotVelocityArray {
 	private int _indexMaxY;
 	private float _range;
 	private bool isfull;
+	private float _rangeSet;
 
-	public RotVelocityArray(int size){
+
+	public RotVelocityArray(int size,float rangeSet){
 		_size = size;
 		_positionArray = new Vector3[size];
 		_velocityArray = new Vector3[size];
 		_timeArray = new float[size];
+		_rangeSet = rangeSet;
 		for (int i = 0; i < size; i++)
 		{
 				_positionArray[i] = new Vector3(0.0f, 0.0f, 0.0f);
@@ -170,6 +173,7 @@ public class Detect_direction_changes : MonoBehaviour {
 //	private GameObject Tree;
 
 	public GameObject Tree;
+	public float rangeSet=0.3f;
 
 	private RotVelocityArray rotArray;
 
@@ -188,7 +192,7 @@ public class Detect_direction_changes : MonoBehaviour {
 		}
 
 		changeDetected = false;
-		rotArray = new RotVelocityArray(50);
+		rotArray = new RotVelocityArray(50,rangeSet);
 		lastChangeTime = 0;
 	}
 
