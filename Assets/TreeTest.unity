@@ -286,16 +286,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77db2a4eb0abd046a710d7511fb0e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeType: 0
-  turnAngle: 25
+  treeType: 3
+  minTurnAngle: 25
+  maxTurnAngle: 25
   totalIterations: 4
   branchLength: 0.5
   lenghtMultiplier: 0.89
-  MinimumDistance: 0
   SecondsPerLine: 0.01
   StartColor: {r: 0.20869754, g: 0.5955882, b: 0.13575907, a: 1}
   EndColor: {r: 0.1912272, g: 0.25, b: 0.18014705, a: 1}
-  StartWidth: 0.5
+  StartWidth: 0.1
   EndWidth: 0.1
 --- !u!4 &1161815312
 Transform:

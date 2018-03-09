@@ -92,6 +92,54 @@ public class RotVelocityArray {
 		return _positionArray [getNextI (_indexMaxY)];
 	}
 
+	public Vector3 getMaxVelocity() {
+		return _velocityArray [getNextI (_indexMaxY)];
+	}
+	public Vector3 getPlanProjection()
+	{
+		Vector3 maxPosition, MaxVelocity;
+		maxPosition = getMaxPosition ();
+		MaxVelocity = getPreviousVelocity ();
+
+		float length;
+		float dotNumerator;
+		float dotDenominator;
+		Vector3 vector;
+		Vector3 intersection = Vector3.zero;
+		Vector3 planePoint, linePoint, planeNormal, lineVec;
+		planePoint = new Vector3 (0f, 0f, 0f);
+		planeNormal = new Vector3 (0f,1f,0f);
+		lineVec = MaxVelocity;
+		linePoint = maxPosition;
+
+		//public static bool LinePlaneIntersection(out Vector3 intersection, Vector3 linePoint, Vector3 lineVec, Vector3 planeNormal, Vector3 planePoint)
+
+			//calculate the distance between the linePoint and the line-plane intersection point
+			dotNumerator = Vector3.Dot((planePoint - linePoint), planeNormal);
+			dotDenominator = Vector3.Dot(lineVec, planeNormal);
+
+			if (dotDenominator != 0.0f)
+			{
+				length = dotNumerator / dotDenominator;
+
+				vector = lineVec.normalized * length;
+
+				intersection = linePoint + vector;
+
+				Debug.DrawLine (linePoint, linePoint + lineVec.normalized,Color.white, 100000f, false);
+				Debug.DrawLine (linePoint, intersection,Color.green, 100000f, false);
+				Debug.DrawLine (planePoint, planeNormal,Color.blue, 100000f, false);
+				return vector;
+			}
+
+			else
+				return Vector3.zero;
+		
+
+
+
+	}
+
 }
 
 
@@ -184,7 +232,8 @@ public class Detect_direction_changes : MonoBehaviour {
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
 				currentTrailRenderer.time = 20;
 				currentTrailRenderer.autodestruct = true;
-
+				//max.y = 0;//-max.z;
+				max = max + rotArray.getPlanProjection ();
 
 				tree.GetComponent<LSystem>().enabled = true;
 				tree.transform.position=max;
