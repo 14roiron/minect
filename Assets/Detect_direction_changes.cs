@@ -103,7 +103,26 @@ public class Detect_direction_changes : MonoBehaviour {
 	public GameObject handTransfrom;
 	public float pauseTime;
 
-	RotVelocityArray rotArray;
+//	public LSystem.TreeType treeType;
+//	public float minTurnAngle = 15.0f;
+//	public float maxTurnAngle = 35.0f;
+//	[Range(1, 4)]
+//	public int totalIterations = 2;
+//	public float branchLength = 0.5f;
+//	[Range(0, 1)]
+//	public float lenghtMultiplier = 1;
+//	public float MinimumDistance = 0.0f;
+//	public float SecondsPerLine = 0.1f;
+//	public Color StartColor = Color.white;
+//	public Color EndColor = Color.white;
+//	public float StartWidth = 0.5f;
+//	public float EndWidth = 0.1f;
+//
+//	private GameObject Tree;
+
+	public GameObject Tree;
+
+	private RotVelocityArray rotArray;
 
 	private GameObject currentTrail;
 	private GameObject currentParticule;
@@ -113,6 +132,12 @@ public class Detect_direction_changes : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (handTransfrom == null) {
+			Debug.Log("sphere not defined", gameObject);
+			return;
+
+		}
+
 		changeDetected = false;
 		rotArray = new RotVelocityArray(50);
 		lastChangeTime = 0;
@@ -123,11 +148,7 @@ public class Detect_direction_changes : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		rotArray.append (gameObject.transform.position);
-		if (handTransfrom == null) {
-			Debug.Log("sphere not defined", gameObject);
-			return;
 
-		}
 		if (changeDetected) {
 			if (Time.time > pauseTime + lastChangeTime) {
 				changeDetected = false;
@@ -141,10 +162,7 @@ public class Detect_direction_changes : MonoBehaviour {
 
 			gameObject.transform.position = handTransfrom.transform.position;
 
-			if(rotArray.getRangeMax()){
-				
-
-
+			if(rotArray.getRangeMax ()) {
 				//currentTransform = Instantiate(gameObject.transform);
 				//currentParticule = Instantiate(handTransfrom);
 				currentTrail = Instantiate(gameObject);
@@ -154,21 +172,20 @@ public class Detect_direction_changes : MonoBehaviour {
 				//ListOfTrail.Add(currentTrail);
 				//Debug.Break();
 
-
 				changeDetected = true;
 				lastChangeTime = Time.time;
 				particles.SetActive (true);
 				Vector3 max = rotArray.getMaxPosition ();
-
+				max.y = 0;//-max.z;
 				particles.transform.position=max;
-				particles.transform.rotation = Quaternion.LookRotation(1* rotArray.getPreviousVelocity().normalized);
+				particles.transform.rotation = Quaternion.LookRotation(-1* rotArray.getPreviousVelocity().normalized);
 
 //				gameObject.GetComponent<LSystemGenerator>().enabled = true;
 				currentTrailRenderer = gameObject.GetComponents<TrailRenderer> () [0];
-				currentTrailRenderer.time = 50;
+				currentTrailRenderer.time = 20;
 				currentTrailRenderer.autodestruct = true;
 
-				max.y = 0;//-max.z;
+
 				tree.GetComponent<LSystem>().enabled = true;
 				tree.transform.position=max;
 				//tree.transform.rotation = Quaternion.LookRotation(rotArray.getPreviousVelocity().normalized);

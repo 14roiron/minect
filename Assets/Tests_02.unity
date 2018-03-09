@@ -314,7 +314,8 @@ MonoBehaviour:
   handTransfrom: {fileID: 1473345867}
   pauseTime: 5
   treeType: 0
-  turnAngle: 25
+  minTurnAngle: 15
+  maxTurnAngle: 35
   totalIterations: 2
   branchLength: 0.5
   lenghtMultiplier: 1
@@ -3984,7 +3985,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treeType: 0
-  turnAngle: 25
+  minTurnAngle: 15
+  maxTurnAngle: 35
   totalIterations: 3
   branchLength: 0.5
   lenghtMultiplier: 0.897
