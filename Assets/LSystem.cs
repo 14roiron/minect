@@ -81,15 +81,14 @@ public class LSystem : MonoBehaviour {
 	}
 
 	public TreeType treeType;
-	public float turnAngle = 25.0f;
+	public float minTurnAngle = 15.0f;
+	public float maxTurnAngle = 35.0f;
 	[Range(1, 4)]
 	public int totalIterations = 2;
 	public float branchLength = 0.5f;
 	[Range(0, 1)]
 	public float lenghtMultiplier = 1;
 
-	[Tooltip("The minimum distance that must be in between line segments (0 for infinite). Attempts to make lines with distances smaller than this will fail.")]
-	public float MinimumDistance = 0.0f;
 	[Tooltip("Seconds that each new line segment should animate with")]
 	public float SecondsPerLine = 0.1f;
 	[Tooltip("Start color for the line renderer since Unity does not provider a getter for this")]
@@ -118,7 +117,7 @@ public class LSystem : MonoBehaviour {
 		LineRenderer lr = AnimatedLine.AddComponent<LineRenderer>() as LineRenderer;
 		lr.material = new Material(Shader.Find("Particles/Alpha Blended"));
 		AnimatedLineRenderer alr = AnimatedLine.AddComponent<AnimatedLineRenderer>() as AnimatedLineRenderer;
-		alr.MinimumDistance = MinimumDistance;
+		alr.MinimumDistance = 0.0f;
 		alr.SecondsPerLine = SecondsPerLine;
 		alr.StartColor = StartColor;
 		alr.EndColor = EndColor;
@@ -180,9 +179,9 @@ public class LSystem : MonoBehaviour {
 				currentNode = new Node (gameObject.transform.position, currentNode);
 			}
 			else if (c == '+')
-				gameObject.transform.Rotate (Vector3.right * turnAngle);
+				gameObject.transform.Rotate (Vector3.right * (Random.value * (maxTurnAngle - minTurnAngle) + minTurnAngle));
 			else if (c == '-')
-				gameObject.transform.Rotate (Vector3.right * -turnAngle);
+				gameObject.transform.Rotate (Vector3.right * -(Random.value * (maxTurnAngle - minTurnAngle) + minTurnAngle));
 			else if (c == '[') {
 				currentBranchLength *= lenghtMultiplier;
 				transformStack.Push (new TransformInfo (gameObject.transform.position, gameObject.transform.rotation));
